@@ -20,7 +20,7 @@ namespace FacultyWebApp.DAL.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-          
+            base.OnModelCreating(modelBuilder);
         }
 
     }
