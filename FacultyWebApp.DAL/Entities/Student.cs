@@ -23,8 +23,7 @@ namespace FacultyWebApp.DAL.Entities
         public int EntryYear { get; set; } = DateTime.Now.Year;
 
         [Required]
-        [PhoneMask("+380631111111",
-            ErrorMessage = "{0} value does not match the mask {1}.")]
+        [RegularExpression(@"/^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm", ErrorMessage = "Incorrect phone number")]
         public string PhoneNum { get; set; }
 
         public EducationType EducationType { get; set; }

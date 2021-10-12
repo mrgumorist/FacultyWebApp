@@ -1,4 +1,8 @@
+using FacultyWebApp.BLL.Interfaces;
+using FacultyWebApp.BLL.Services;
 using FacultyWebApp.DAL.Entities;
+using FacultyWebApp.DAL.Interfaces;
+using FacultyWebApp.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,6 +44,11 @@ namespace FacultyWebApp.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
+            services.AddScoped<IGenericRepository<Student>, GenericRepository<Student>>();
+
+            services.AddScoped<IStudentsService, StudentsService>();
+
+           // services.AddAutoMapper(c => c.AddProfile<BLL.Mappers.AutoMapping>(), typeof(Startup))
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

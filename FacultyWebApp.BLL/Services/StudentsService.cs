@@ -16,13 +16,13 @@ namespace FacultyWebApp.BLL.Services
     {
         private readonly IGenericRepository<Student> _genericRepo;
         private readonly ILogger<StudentsService> _logger;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
 
-        public StudentsService(IGenericRepository<Student> genericRepo, ILogger<StudentsService> logger, IMapper mapper )
+        public StudentsService(IGenericRepository<Student> genericRepo, ILogger<StudentsService> logger/*, IMapper mapper*/ )
         {
             _genericRepo = genericRepo;
             _logger = logger;
-            _mapper = mapper;
+            //_mapper = mapper;
         }
 
         public AppActionResult GetUserById(int id)
