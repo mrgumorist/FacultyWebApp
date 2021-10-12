@@ -2,15 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace FacultyWebApp.DAL.Entities
+namespace FacultyWebApp.BLL.DTOs
 {
-    [Table("Students")]
-    public class Student
+    public class StudentDTO
     {
-        [Key]
         public int Id { get; set; }
 
         [Required, StringLength(maximumLength: 40)]
@@ -25,15 +22,16 @@ namespace FacultyWebApp.DAL.Entities
         [Required]
         [PhoneMask("+380631111111",
             ErrorMessage = "{0} value does not match the mask {1}.")]
+
         public string PhoneNum { get; set; }
 
-        public EducationType EducationType { get; set; }
+        [Required]
         public int EducationTypeId { get; set; }
 
         [Required]
         public bool IsDeducted { get; set; } = false;
 
-        public Group Group { get; set; }
+        [Required]
         public int GroupId { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace FacultyWebApp.Domain.ActionModels
 {
     public class AppActionResult
     {
-        public bool IsSuccessful { get; set; }
+        public bool IsSuccessful { get; set; } = false;
         public string Message { get; set; }
         public object ResObj { get; set; }
 
