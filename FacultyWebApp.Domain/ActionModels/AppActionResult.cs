@@ -10,6 +10,8 @@ namespace FacultyWebApp.Domain.ActionModels
         public string Message { get; set; }
         public object ResObj { get; set; }
 
+        public int StatusCode { get; set; }
+
         public AppActionResult()
         {
 
@@ -26,6 +28,14 @@ namespace FacultyWebApp.Domain.ActionModels
             IsSuccessful = isSuccessful;
             Message = message;
             ResObj = resObj;
+        }
+
+        public AppActionResult(bool isSuccessful, string message, object resObj, int statusCode)
+        {
+            IsSuccessful = isSuccessful;
+            Message = message;
+            ResObj = resObj;
+            StatusCode = statusCode;
         }
     }
 }
