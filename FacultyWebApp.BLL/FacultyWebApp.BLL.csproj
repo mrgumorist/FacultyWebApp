@@ -4,4 +4,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FacultyWebApp.DAL\FacultyWebApp.DAL.csproj" />
+    <ProjectReference Include="..\FacultyWebApp.Domain\FacultyWebApp.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

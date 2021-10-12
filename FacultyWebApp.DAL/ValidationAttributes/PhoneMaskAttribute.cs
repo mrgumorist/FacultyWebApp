@@ -35,6 +35,7 @@ namespace FacultyWebApp.DAL.ValidationAttributes
 
         internal bool MatchesMask(string mask, string phoneNumber)
         {
+            //TODO: Add regual expression
             if (mask.Length != phoneNumber.Trim().Length)
             {
                 return false;

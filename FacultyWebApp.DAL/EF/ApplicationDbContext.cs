@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FacultyWebApp.DAL.Entities
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : DbContext
     {
         public DbSet<Dictionary> Dictionaries { get; set; }
         public DbSet<Subject> Subject { get; set; }
@@ -22,6 +22,5 @@ namespace FacultyWebApp.DAL.Entities
         {
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }
