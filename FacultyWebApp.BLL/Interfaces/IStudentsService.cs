@@ -1,4 +1,5 @@
-﻿using FacultyWebApp.Domain.ActionModels;
+﻿using FacultyWebApp.BLL.DTOs;
+using FacultyWebApp.Domain.ActionModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,8 @@ namespace FacultyWebApp.BLL.Interfaces
 {
     public interface IStudentsService
     {
-        public AppActionResult GetUserById(int id);
-        public Task<AppActionResult> GetUserByIdAsync(int id);
+        public StudentDTO GetStudentById(Guid id);
+        public Task<StudentDTO> GetStudentByIdAsync(Guid id);
+        public void AddStudent(StudentDTO studentDTO);
     }
 }

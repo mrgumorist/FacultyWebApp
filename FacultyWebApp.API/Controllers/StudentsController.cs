@@ -1,4 +1,6 @@
-﻿using FacultyWebApp.BLL.Interfaces;
+﻿using FacultyWebApp.BLL.DTOs;
+using FacultyWebApp.BLL.Infrastructure;
+using FacultyWebApp.BLL.Interfaces;
 using FacultyWebApp.Domain.ActionModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,47 +27,81 @@ namespace FacultyWebApp.API.Controllers
 
 
         [HttpGet("{id}")]
-        public IActionResult GetStudentById(int id)
+        public IActionResult GetStudentById(Guid id)
         {
-            AppActionResult requestRes = new AppActionResult();
-
-            var actionRes = _studentsService.GetUserById(id);
-
-            requestRes.StatusCode = actionRes.StatusCode;
-            requestRes.Message = actionRes.Message;
-            requestRes.IsSuccessful = actionRes.IsSuccessful;
-            if (actionRes.IsSuccessful == false)
+            AppResponseResult requestResult = new AppResponseResult();
+            try
             {
-                if (actionRes.StatusCode == 404)
-                {
-                    return NotFound(requestRes);
-                }
+                var student = _studentsService.GetStudentById(id);
+                requestResult.IsSuccessful = true;
+                requestResult.Message = "Successfuly founded";
+                requestResult.ResObj = student;
+                requestResult.StatusCode = 200;
             }
-
-            return Ok(requestRes);
+            catch(ValidationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok(requestResult);
         }
 
         [HttpGet("GetUserByIdAsync/{id}")]
-        public async Task<IActionResult> GetStudentByIdAsync(int id)
+        public async Task<IActionResult> GetStudentByIdAsync(Guid id)
         {
-            AppActionResult requestRes = new AppActionResult();
-
-            var actionRes = await _studentsService.GetUserByIdAsync(id);
-
-            requestRes.StatusCode = actionRes.StatusCode;
-            requestRes.Message = actionRes.Message;
-            requestRes.IsSuccessful = actionRes.IsSuccessful;
-            if (actionRes.IsSuccessful == false)
+            AppResponseResult requestResult = new AppResponseResult();
+            try
             {
-                if (actionRes.StatusCode == 404)
-                {
-                    return NotFound(requestRes);
-                }
+                var student = await _studentsService.GetStudentByIdAsync(id);
+                requestResult.IsSuccessful = true;
+                requestResult.Message = "Successfuly founded";
+                requestResult.ResObj = student;
+                requestResult.StatusCode = 200;
             }
-
-            return Ok(requestRes);
+            catch (ValidationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok(requestResult);
         }
 
+        [HttpPost("CreateStudent")]
+        public IActionResult CreateStudent([FromBody]StudentDTO studentDto)
+        {
+            AppResponseResult requestResult = new AppResponseResult();
+            if (!ModelState.IsValid)
+            {
+                return Ok(studentDto);
+            }
+            else
+            {
+                _studentsService.AddStudent(studentDto);
+            try
+            {
+                //bool studentDTO = _studentsService.AddStudent(student);
+                //requestResult.IsSuccessful = true;
+                //requestResult.Message = "Successfuly founded";
+                //requestResult.ResObj = student;
+                //requestResult.StatusCode = 200;
+            }
+            catch (ValidationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch
+            {
+                return BadRequest();
+            }
 
+            }
+            return Ok(requestResult);
+        }
     }
 }

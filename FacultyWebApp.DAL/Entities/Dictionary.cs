@@ -9,8 +9,8 @@ namespace FacultyWebApp.DAL.Entities
     [Table("Dictionaries")]
     public class Dictionary
     {
-        [Key]
-        public int Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         public string Education { get; set; }
@@ -18,6 +18,6 @@ namespace FacultyWebApp.DAL.Entities
         public ICollection<DictionarySubject> DictionarySubjects { get; set; }
 
         public  EducationType EducationType { get; set; }
-        public int EducationTypeId { get; set; }
+        public Guid EducationTypeId { get; set; }
     }
 }

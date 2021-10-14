@@ -9,8 +9,8 @@ namespace FacultyWebApp.DAL.Entities
     [Table("Subjects")]
     public class Subject
     {
-        [Key]
-        public int Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }

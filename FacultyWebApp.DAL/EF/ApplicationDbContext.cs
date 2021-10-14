@@ -22,23 +22,31 @@ namespace FacultyWebApp.DAL.Entities
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<EducationType>().HasData(
-                new EducationType
-                {
-                    Name = "Bachelor",
-                    Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years."
-                },
-                 new EducationType
-                 {
-                     Name = "Master",
-                     Description = "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice."
-                 }
-                 );
+            //modelBuilder.Entity<EducationType>().HasData(
+            //    new EducationType
+            //    {
+            //        Id = 1,
+            //        Name = "Bachelor",
+            //        Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years."
+            //    },
+            //     new EducationType
+            //     {
+            //         Id = 2,
+            //         Name = "Master",
+            //         Description = "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice."
+            //     });
 
-            modelBuilder.Entity<Group>().HasData(
-                new Group() { Code = "B44" },
-                new Group() { Code = "F74" }
-                );
+            //modelBuilder.Entity<Group>().HasData(
+            //    new Group
+            //    {
+            //        Id = 1,
+            //        Code = "B44"
+            //    },
+            //    new Group
+            //    {
+            //        Id = 2,
+            //        Code = "F74"
+            //    });
         }
     }
 }

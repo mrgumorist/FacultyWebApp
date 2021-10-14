@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FacultyWebApp.DAL.Migrations
 {
@@ -12,8 +11,7 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "EducationTypes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
@@ -26,8 +24,7 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Code = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -39,8 +36,7 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Subjects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
@@ -53,8 +49,7 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Teachers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Surname = table.Column<string>(maxLength: 40, nullable: false),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     FatherName = table.Column<string>(maxLength: 40, nullable: false),
@@ -71,10 +66,9 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Dictionaries",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Education = table.Column<string>(nullable: false),
-                    EducationTypeId = table.Column<int>(nullable: false)
+                    EducationTypeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,15 +85,14 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Surname = table.Column<string>(maxLength: 40, nullable: false),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     EntryYear = table.Column<int>(nullable: false),
                     PhoneNum = table.Column<string>(nullable: false),
-                    EducationTypeId = table.Column<int>(nullable: false),
+                    EducationTypeId = table.Column<Guid>(nullable: false),
                     IsDeducted = table.Column<bool>(nullable: false),
-                    GroupId = table.Column<int>(nullable: false)
+                    GroupId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,13 +115,13 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Shedules",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Semester = table.Column<string>(nullable: false),
+                    SubjectId1 = table.Column<Guid>(nullable: true),
                     SubjectId = table.Column<int>(nullable: false),
                     Time = table.Column<DateTime>(nullable: false),
-                    TeacherId = table.Column<int>(nullable: false),
-                    GroupId = table.Column<int>(nullable: false)
+                    TeacherId = table.Column<Guid>(nullable: false),
+                    GroupId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,11 +133,11 @@ namespace FacultyWebApp.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Shedules_Subjects_SubjectId",
-                        column: x => x.SubjectId,
+                        name: "FK_Shedules_Subjects_SubjectId1",
+                        column: x => x.SubjectId1,
                         principalTable: "Subjects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Shedules_Teachers_TeacherId",
                         column: x => x.TeacherId,
@@ -157,10 +150,9 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Dictionaries_Subjects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    SubjectId = table.Column<int>(nullable: false),
-                    DictionaryId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    SubjectId = table.Column<Guid>(nullable: false),
+                    DictionaryId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -200,9 +192,9 @@ namespace FacultyWebApp.DAL.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shedules_SubjectId",
+                name: "IX_Shedules_SubjectId1",
                 table: "Shedules",
-                column: "SubjectId");
+                column: "SubjectId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shedules_TeacherId",

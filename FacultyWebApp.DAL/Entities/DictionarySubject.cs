@@ -10,14 +10,13 @@ namespace FacultyWebApp.DAL.Entities
     [Table("Dictionaries_Subjects")]
     public class DictionarySubject
     {
-        [Key]
-        public int Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         public Subject Subject { get; set; }
-        public int SubjectId { get; set; }
+        public Guid SubjectId { get; set; }
 
         public Dictionary Dictionary { get; set; }
-        public int DictionaryId { get; set; }
-
+        public Guid DictionaryId { get; set; }
     }
 }

@@ -10,8 +10,8 @@ namespace FacultyWebApp.DAL.Entities
     [Table("Shedules")]
     public class Shedule
     {
-        [Key]
-        public int Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [SemesterMask("2_2021",
@@ -25,9 +25,9 @@ namespace FacultyWebApp.DAL.Entities
         public DateTime Time { get; set; }
 
         public Teacher Teacher { get; set; }
-        public int TeacherId { get; set; }
+        public Guid TeacherId { get; set; }
 
         public Group Group { get; set; }
-        public int GroupId { get; set; }
+        public Guid GroupId { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FacultyWebApp.BLL.DTOs;
+using FacultyWebApp.BLL.Infrastructure;
 using FacultyWebApp.BLL.Interfaces;
 using FacultyWebApp.DAL.Entities;
 using FacultyWebApp.DAL.Interfaces;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FacultyWebApp.BLL.Services
 {
-    public class StudentsService: IStudentsService
+    public class StudentsService : IStudentsService
     {
         private readonly IGenericRepository<Student> _genericRepo;
         private readonly ILogger<StudentsService> _logger;
@@ -25,88 +26,74 @@ namespace FacultyWebApp.BLL.Services
             //_mapper = mapper;
         }
 
-        public AppActionResult GetUserById(int id)
+        public StudentDTO GetStudentById(Guid id)
         {
-            AppActionResult actionResult = new AppActionResult();
-            try
+            var student = _genericRepo.GetById(id);
+            if (student == null)
             {
-                var student = _genericRepo.GetById(id);
-                if (student==null)
-                {
-                    actionResult.IsSuccessful = false;
-                    actionResult.Message = "Student was not founded.";
-                    actionResult.StatusCode = 404;
-                    return actionResult;
-                }
-
-                var studentDTO = new StudentDTO()
-                {
-                    Id = student.Id,
-                    Name = student.Name,
-                    Surname = student.Surname,
-                    IsDeducted = student.IsDeducted,
-                    EntryYear = student.EntryYear,
-                    PhoneNum = student.PhoneNum,
-                    EducationTypeId = student.EducationTypeId,
-                    GroupId = student.GroupId
-                };
-
-                actionResult.IsSuccessful = true;
-                actionResult.Message = "Student was successfuly founded.";
-                actionResult.ResObj = studentDTO;
-                actionResult.StatusCode = 200;
-            }
-            catch (Exception ex)
-            {
-                actionResult.IsSuccessful = false;
-                actionResult.Message = $"Error occured: {ex.Message}.";
-                actionResult.StatusCode = 500;
-                return actionResult;
+                throw new ValidationException("Student was not founded", "id");
             }
 
-            return actionResult;
+            var studentDTO = new StudentDTO()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Surname = student.Surname,
+                IsDeducted = student.IsDeducted,
+                EntryYear = student.EntryYear,
+                PhoneNum = student.PhoneNum,
+                EducationTypeId = student.EducationTypeId,
+                GroupId = student.Group.Id
+            };
+
+            return studentDTO;
         }
 
-        public async Task<AppActionResult> GetUserByIdAsync(int id)
+        public async Task<StudentDTO> GetStudentByIdAsync(Guid id)
         {
-            AppActionResult actionResult = new AppActionResult();
+            var student = await _genericRepo.GetByIdAsync(id);
+            if (student == null)
+            {
+                throw new ValidationException("Student was not founded", "id");
+            }
+
+            var studentDTO = new StudentDTO()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Surname = student.Surname,
+                IsDeducted = student.IsDeducted,
+                EntryYear = student.EntryYear,
+                PhoneNum = student.PhoneNum,
+                EducationTypeId = student.EducationTypeId,
+                GroupId = student.Group.Id
+            };
+
+            return studentDTO;
+        }
+
+        public void AddStudent(StudentDTO studentDTO)
+        {
             try
             {
-                var student = await _genericRepo.GetByIdAsync(id);
-                if (student == null)
+                var student = new Student()
                 {
-                    actionResult.IsSuccessful = false;
-                    actionResult.Message = "Student was not founded.";
-                    actionResult.StatusCode = 404;
-                    return actionResult;
-                }
-
-                var studentDTO = new StudentDTO()
-                {
-                    Id = student.Id,
-                    Name = student.Name,
-                    Surname = student.Surname,
-                    IsDeducted = student.IsDeducted,
-                    EntryYear = student.EntryYear,
-                    PhoneNum = student.PhoneNum,
-                    EducationTypeId = student.EducationTypeId,
-                    GroupId = student.GroupId
+                    EducationTypeId = studentDTO.EducationTypeId,
+                    EntryYear = studentDTO.EntryYear,
+                    GroupId = studentDTO.GroupId,
+                    IsDeducted = studentDTO.IsDeducted,
+                    Name = studentDTO.Name,
+                    PhoneNum = studentDTO.PhoneNum,
+                    Surname = studentDTO.Surname
                 };
 
-                actionResult.IsSuccessful = true;
-                actionResult.Message = "Student was successfuly founded.";
-                actionResult.ResObj = studentDTO;
-                actionResult.StatusCode = 200;
+
+                _genericRepo.Add(student);
             }
             catch (Exception ex)
             {
-                actionResult.IsSuccessful = false;
-                actionResult.Message = $"Error occured: {ex.Message}.";
-                actionResult.StatusCode = 500;
-                return actionResult;
-            }
 
-            return actionResult;
+            }
         }
     }
 }

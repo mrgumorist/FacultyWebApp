@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FacultyWebApp.Domain.ActionModels
 {
-    public class AppActionResult
+    public class AppResponseResult
     {
         public bool IsSuccessful { get; set; } = false;
         public string Message { get; set; }
@@ -12,25 +12,25 @@ namespace FacultyWebApp.Domain.ActionModels
 
         public int StatusCode { get; set; }
 
-        public AppActionResult()
+        public AppResponseResult()
         {
 
         }
 
-        public AppActionResult(bool isSuccessful, string message)
+        public AppResponseResult(bool isSuccessful, string message)
         {
             IsSuccessful = isSuccessful;
             Message = message;
         }
 
-        public AppActionResult(bool isSuccessful, string message, object resObj)
+        public AppResponseResult(bool isSuccessful, string message, object resObj)
         {
             IsSuccessful = isSuccessful;
             Message = message;
             ResObj = resObj;
         }
 
-        public AppActionResult(bool isSuccessful, string message, object resObj, int statusCode)
+        public AppResponseResult(bool isSuccessful, string message, object resObj, int statusCode)
         {
             IsSuccessful = isSuccessful;
             Message = message;

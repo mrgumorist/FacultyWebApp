@@ -8,7 +8,7 @@ namespace FacultyWebApp.BLL.DTOs
 {
     public class StudentDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required, StringLength(maximumLength: 40)]
         public string Surname { get; set; }
@@ -20,16 +20,16 @@ namespace FacultyWebApp.BLL.DTOs
         public int EntryYear { get; set; } = DateTime.Now.Year;
 
         [Required]
-        [RegularExpression(@"/^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm", ErrorMessage = "Incorrect phone number")]
+        [RegularExpression(@"^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$", ErrorMessage = "Incorrect phone number")]
         public string PhoneNum { get; set; }
 
         [Required]
-        public int EducationTypeId { get; set; }
+        public Guid EducationTypeId { get; set; }
 
         [Required]
         public bool IsDeducted { get; set; } = false;
 
         [Required]
-        public int GroupId { get; set; }
+        public Guid GroupId { get; set; }
     }
 }
