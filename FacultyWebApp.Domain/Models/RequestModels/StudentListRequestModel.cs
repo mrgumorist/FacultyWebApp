@@ -6,8 +6,8 @@ namespace FacultyWebApp.Domain.Models.RequestModels
 {
     public class StudentListRequestModel
     {
-        string Surname { get; set; }
-        bool? IsDeducted { get; set; }
-        int? GroupId { get; set; }
+        public string Surname { get; set; }
+        public bool? IsDeducted { get; set; }
+        public int? GroupId { get; set; }
     }
 }
