@@ -33,5 +33,7 @@ namespace FacultyWebApp.DAL.Entities
         public string PhoneNum { get; set; }
 
         public ICollection<Shedule> Shedules { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

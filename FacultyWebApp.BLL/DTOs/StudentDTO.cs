@@ -29,5 +29,6 @@ namespace FacultyWebApp.BLL.DTOs
         public bool IsDeducted { get; set; } = false;
 
         public int GroupId { get; set; }
+
     }
 }

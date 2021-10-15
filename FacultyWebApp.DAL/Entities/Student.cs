@@ -34,5 +34,7 @@ namespace FacultyWebApp.DAL.Entities
 
         public Group Group { get; set; }
         public int GroupId { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

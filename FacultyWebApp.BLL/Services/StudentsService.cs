@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using FacultyWebApp.Domain.Models.RequestModels;
 
 namespace FacultyWebApp.BLL.Services
 {
@@ -35,6 +36,11 @@ namespace FacultyWebApp.BLL.Services
                 throw new ValidationException("Student was not founded", "id");
             }
 
+            if (student.IsDeleted == true)
+            {
+                throw new ValidationException("Student was deleted", "id");
+            }
+
             var studentDTO = new StudentDTO()
             {
                 Id = student.Id,
@@ -56,6 +62,10 @@ namespace FacultyWebApp.BLL.Services
             if (student == null)
             {
                 throw new ValidationException("Student was not founded", "id");
+            }
+            if (student.IsDeleted == true)
+            {
+                throw new ValidationException("Student was deleted", "id");
             }
 
             var studentDTO = new StudentDTO()
@@ -113,6 +123,11 @@ namespace FacultyWebApp.BLL.Services
                 throw new ValidationException("Student was not founded", "id");
             }
 
+            if (student.IsDeleted == true)
+            {
+                throw new ValidationException("Student was deleted", "id");
+            }
+
             student.EducationTypeId = studentDTO.EducationTypeId;
             student.EntryYear = studentDTO.EntryYear;
             student.GroupId = studentDTO.GroupId;
@@ -122,6 +137,29 @@ namespace FacultyWebApp.BLL.Services
             student.Surname = studentDTO.Surname;
 
             _genericRepo.Update(student);
+        }
+
+        public void DeleteStudentById(Guid id)
+        {
+            var student = _genericRepo.GetById(id);
+            if (student == null)
+            {
+                throw new ValidationException("Student was not founded", "id");
+            }
+
+            if (student.IsDeleted == true)
+            {
+                throw new ValidationException("Student was before deleted", "id");
+            }
+
+            student.IsDeleted = true;
+            _genericRepo.Update(student);
+        }
+
+        public List<StudentDTO> AllByFilters(StudentListRequestModel filters)
+        {
+            var students = _genericRepo.Find(x=>x.IsDeducted==false);
+            return null;
         }
     }
 }
