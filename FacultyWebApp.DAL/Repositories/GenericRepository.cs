@@ -1,5 +1,6 @@
 ﻿using FacultyWebApp.DAL.Entities;
 using FacultyWebApp.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,12 @@ namespace FacultyWebApp.DAL.Repositories
         public void RemoveRange(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
+            _context.SaveChanges();
+        }
+
+        public void Update(T entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
         }
     }

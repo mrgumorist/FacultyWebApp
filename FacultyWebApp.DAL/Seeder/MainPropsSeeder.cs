@@ -39,48 +39,6 @@ namespace FacultyWebApp.DAL.Seeder
                 context.SaveChanges();
             }
         }
-
-        /*public static void SeedParsingUserSettings(AppDbContext context)
-        {
-            if (context.SettingsProps.SingleOrDefault(c => c.Name == "ParserUserName") == null)
-            {
-                context.SettingsProps.Add(new Entities.SettingsProp
-                {
-                    Name = "ParserUserName",
-                    Value = "mrgumor@gmail.com"
-                });
-                context.SaveChanges();
-            }
-
-            if (context.SettingsProps.SingleOrDefault(c => c.Name == "ParserUserPassword") == null)
-            {
-                context.SettingsProps.Add(new Entities.SettingsProp
-                {
-                    Name = "ParserUserPassword",
-                    Value = "r!4vcBzVy8"
-                });
-                context.SaveChanges();
-            }
-
-            if (context.SettingsProps.SingleOrDefault(c => c.Name == "UserToken") == null)
-            {
-                context.SettingsProps.Add(new Entities.SettingsProp
-                {
-                    Name = "UserToken",
-                    Value = ""
-                });
-                context.SaveChanges();
-            }
-
-            if (context.SettingsProps.SingleOrDefault(c => c.Name == "LastParseDate") == null)
-            {
-                context.SettingsProps.Add(new Entities.SettingsProp
-                {
-                    Name = "LastParseDate",
-                    Value = ""
-                });
-                context.SaveChanges();
-            }
-        }*/
+        
     }
 }

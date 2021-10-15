@@ -17,5 +17,6 @@ namespace FacultyWebApp.DAL.Interfaces
         void AddRange(IEnumerable<T> entities);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
+        public void Update(T entity);
     }
 }

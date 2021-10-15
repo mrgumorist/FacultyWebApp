@@ -13,5 +13,6 @@ namespace FacultyWebApp.BLL.Interfaces
         public Task<StudentDTO> GetStudentByIdAsync(Guid id);
         public void AddStudent(StudentDTO studentDTO);
         public Task AddStudentAsync(StudentDTO studentDTO);
+        public void ChangeStudent(StudentDTO studentDTO);
     }
 }

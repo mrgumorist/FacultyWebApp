@@ -104,5 +104,24 @@ namespace FacultyWebApp.BLL.Services
 
             await _genericRepo.AddAsync(student);
         }
+
+        public void ChangeStudent(StudentDTO studentDTO)
+        {
+            var student = _genericRepo.GetById(studentDTO.Id);
+            if (student == null)
+            {
+                throw new ValidationException("Student was not founded", "id");
+            }
+
+            student.EducationTypeId = studentDTO.EducationTypeId;
+            student.EntryYear = studentDTO.EntryYear;
+            student.GroupId = studentDTO.GroupId;
+            student.IsDeducted = studentDTO.IsDeducted;
+            student.Name = studentDTO.Name;
+            student.PhoneNum = studentDTO.PhoneNum;
+            student.Surname = studentDTO.Surname;
+
+            _genericRepo.Update(student);
+        }
     }
 }

@@ -145,6 +145,28 @@ namespace FacultyWebApp.API.Controllers
             responseRes.Message = "Successfuly added";
             return Ok(responseRes);
         }
+
+        [HttpPost("ChangeStudent")]
+        public IActionResult ChangeStudent([FromBody]StudentDTO studentDTO)
+        {
+            AppResponseResult responseRes = new AppResponseResult();
+            try
+            {
+                _studentsService.ChangeStudent(studentDTO);
+                responseRes.IsSuccessful = true;
+                responseRes.Message = "Successfuly updated";
+                responseRes.StatusCode = Ok().StatusCode;
+            }
+            catch (ValidationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok(responseRes);
+        }
     }
 
 }
