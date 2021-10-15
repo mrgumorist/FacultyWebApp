@@ -46,7 +46,13 @@ namespace FacultyWebApp.API
 
             services.AddScoped<IGenericRepository<Student>, GenericRepository<Student>>();
 
+            services.AddScoped<IGenericRepository<Group>, GenericRepository<Group>>();
+
+            services.AddScoped<IGenericRepository<EducationType>, GenericRepository<EducationType>>();
+
             services.AddScoped<IStudentsService, StudentsService>();
+
+            services.AddScoped<IDataService, DataService>();
 
             services.Configure<ApiBehaviorOptions>(options =>
             {

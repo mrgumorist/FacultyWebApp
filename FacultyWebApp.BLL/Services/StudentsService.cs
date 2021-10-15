@@ -5,11 +5,14 @@ using FacultyWebApp.BLL.Interfaces;
 using FacultyWebApp.DAL.Entities;
 using FacultyWebApp.DAL.Interfaces;
 using FacultyWebApp.Domain.ActionModels;
+using FacultyWebApp.Domain.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+using FacultyWebApp.Domain.Models.ResponseModels.AddictionalProps;
 
 namespace FacultyWebApp.BLL.Services
 {
@@ -74,18 +77,18 @@ namespace FacultyWebApp.BLL.Services
 
         public void AddStudent(StudentDTO studentDTO)
         {
-                var student = new Student()
-                {
-                    EducationTypeId = studentDTO.EducationTypeId,
-                    EntryYear = studentDTO.EntryYear,
-                    GroupId = studentDTO.GroupId,
-                    IsDeducted = studentDTO.IsDeducted,
-                    Name = studentDTO.Name,
-                    PhoneNum = studentDTO.PhoneNum,
-                    Surname = studentDTO.Surname
-                };
-                    
-                _genericRepo.Add(student);
+            var student = new Student()
+            {
+                EducationTypeId = studentDTO.EducationTypeId,
+                EntryYear = studentDTO.EntryYear,
+                GroupId = studentDTO.GroupId,
+                IsDeducted = studentDTO.IsDeducted,
+                Name = studentDTO.Name,
+                PhoneNum = studentDTO.PhoneNum,
+                Surname = studentDTO.Surname
+            };
+
+            _genericRepo.Add(student);
         }
 
         public async Task AddStudentAsync(StudentDTO studentDTO)

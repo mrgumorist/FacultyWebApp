@@ -38,7 +38,7 @@ namespace FacultyWebApp.API.Controllers
                 responseRes.ResObj = student;
                 responseRes.StatusCode = Ok().StatusCode;
             }
-            catch(ValidationException ex)
+            catch (ValidationException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -73,7 +73,7 @@ namespace FacultyWebApp.API.Controllers
         }
 
         [HttpPost("CreateStudent")]
-        public IActionResult CreateStudent([FromBody]StudentDTO studentDto)
+        public IActionResult CreateStudent([FromBody] StudentDTO studentDto)
         {
             AppResponseResult responseRes = new AppResponseResult();
             if (!ModelState.IsValid)
@@ -135,7 +135,7 @@ namespace FacultyWebApp.API.Controllers
                 {
                     await _studentsService.AddStudentAsync(studentDto);
                 }
-                catch 
+                catch
                 {
                     responseRes.IsSuccessful = false;
                     responseRes.Message = "Error with student. Maybe group or type of education are not valid.";
@@ -150,4 +150,5 @@ namespace FacultyWebApp.API.Controllers
             return Ok(responseRes);
         }
     }
+
 }

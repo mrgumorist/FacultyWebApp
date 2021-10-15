@@ -23,13 +23,11 @@ namespace FacultyWebApp.BLL.DTOs
         [RegularExpression(@"^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$", ErrorMessage = "Incorrect phone number")]
         public string PhoneNum { get; set; }
 
-        [Required]
         public Guid EducationTypeId { get; set; }
 
         [Required]
         public bool IsDeducted { get; set; } = false;
 
-        [Required]
         public Guid GroupId { get; set; }
     }
 }
