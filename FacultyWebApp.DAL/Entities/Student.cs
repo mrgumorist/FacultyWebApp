@@ -27,12 +27,12 @@ namespace FacultyWebApp.DAL.Entities
         public string PhoneNum { get; set; }
 
         public EducationType EducationType { get; set; }
-        public Guid EducationTypeId { get; set; }
+        public int EducationTypeId { get; set; }
 
         [Required]
         public bool IsDeducted { get; set; } = false;
 
         public Group Group { get; set; }
-        public Guid GroupId { get; set; }
+        public int GroupId { get; set; }
     }
 }

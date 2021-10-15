@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FacultyWebApp.DAL.Migrations
 {
-    public partial class initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +12,8 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "EducationTypes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
@@ -24,7 +26,8 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Code = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -36,7 +39,8 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Subjects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
@@ -49,7 +53,8 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "Teachers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Surname = table.Column<string>(maxLength: 40, nullable: false),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     FatherName = table.Column<string>(maxLength: 40, nullable: false),
@@ -68,7 +73,7 @@ namespace FacultyWebApp.DAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Education = table.Column<string>(nullable: false),
-                    EducationTypeId = table.Column<Guid>(nullable: false)
+                    EducationTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,9 +95,9 @@ namespace FacultyWebApp.DAL.Migrations
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     EntryYear = table.Column<int>(nullable: false),
                     PhoneNum = table.Column<string>(nullable: false),
-                    EducationTypeId = table.Column<Guid>(nullable: false),
+                    EducationTypeId = table.Column<int>(nullable: false),
                     IsDeducted = table.Column<bool>(nullable: false),
-                    GroupId = table.Column<Guid>(nullable: false)
+                    GroupId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -117,11 +122,10 @@ namespace FacultyWebApp.DAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Semester = table.Column<string>(nullable: false),
-                    SubjectId1 = table.Column<Guid>(nullable: true),
                     SubjectId = table.Column<int>(nullable: false),
                     Time = table.Column<DateTime>(nullable: false),
-                    TeacherId = table.Column<Guid>(nullable: false),
-                    GroupId = table.Column<Guid>(nullable: false)
+                    TeacherId = table.Column<int>(nullable: false),
+                    GroupId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,11 +137,11 @@ namespace FacultyWebApp.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Shedules_Subjects_SubjectId1",
-                        column: x => x.SubjectId1,
+                        name: "FK_Shedules_Subjects_SubjectId",
+                        column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Shedules_Teachers_TeacherId",
                         column: x => x.TeacherId,
@@ -151,18 +155,19 @@ namespace FacultyWebApp.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    SubjectId = table.Column<Guid>(nullable: false),
-                    DictionaryId = table.Column<Guid>(nullable: false)
+                    SubjectId = table.Column<int>(nullable: false),
+                    DictionaryId1 = table.Column<Guid>(nullable: true),
+                    DictionaryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Dictionaries_Subjects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Dictionaries_Subjects_Dictionaries_DictionaryId",
-                        column: x => x.DictionaryId,
+                        name: "FK_Dictionaries_Subjects_Dictionaries_DictionaryId1",
+                        column: x => x.DictionaryId1,
                         principalTable: "Dictionaries",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Dictionaries_Subjects_Subjects_SubjectId",
                         column: x => x.SubjectId,
@@ -171,15 +176,42 @@ namespace FacultyWebApp.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "EducationTypes",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years.", "Bachelor" },
+                    { 2, "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice.", "Master" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Groups",
+                columns: new[] { "Id", "Code" },
+                values: new object[,]
+                {
+                    { 1, "B44" },
+                    { 2, "F74" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Subjects",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "The study of places and the relationships between people and their environments.", "Geography" },
+                    { 2, "It is a way of expressing philosophical resignation over a disappointment, of saying that the situation just has to be put up with", "Philosophy" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Dictionaries_EducationTypeId",
                 table: "Dictionaries",
                 column: "EducationTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Dictionaries_Subjects_DictionaryId",
+                name: "IX_Dictionaries_Subjects_DictionaryId1",
                 table: "Dictionaries_Subjects",
-                column: "DictionaryId");
+                column: "DictionaryId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dictionaries_Subjects_SubjectId",
@@ -192,9 +224,9 @@ namespace FacultyWebApp.DAL.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shedules_SubjectId1",
+                name: "IX_Shedules_SubjectId",
                 table: "Shedules",
-                column: "SubjectId1");
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shedules_TeacherId",

@@ -1,6 +1,5 @@
 ﻿using FacultyWebApp.BLL.DTOs;
 using FacultyWebApp.Domain.ActionModels;
-using FacultyWebApp.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

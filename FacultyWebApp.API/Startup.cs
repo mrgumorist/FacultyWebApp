@@ -58,6 +58,7 @@ namespace FacultyWebApp.API
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+
             // services.AddAutoMapper(c => c.AddProfile<BLL.Mappers.AutoMapping>(), typeof(Startup))
         }
 

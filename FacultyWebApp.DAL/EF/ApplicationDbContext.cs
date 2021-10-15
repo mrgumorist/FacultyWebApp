@@ -21,32 +21,72 @@ namespace FacultyWebApp.DAL.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            #region Seeding
+            modelBuilder.Entity<EducationType>().HasData(
+                new EducationType
+                {
+                    Id=1,
+                    Name = "Bachelor",
+                    Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years."
+                },
+                 new EducationType
+                 {
+                     Id = 2,
+                     Name = "Master",
+                     Description = "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice."
+                 });
 
-            //modelBuilder.Entity<EducationType>().HasData(
-            //    new EducationType
-            //    {
-            //        Id = 1,
-            //        Name = "Bachelor",
-            //        Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years."
-            //    },
-            //     new EducationType
-            //     {
-            //         Id = 2,
-            //         Name = "Master",
-            //         Description = "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice."
-            //     });
+            modelBuilder.Entity<Group>().HasData(
+                new Group
+                {
+                    Id = 1,
+                    Code = "B44"
+                },
+                new Group
+                {
+                    Id = 2,
+                    Code = "F74"
+                });
 
-            //modelBuilder.Entity<Group>().HasData(
-            //    new Group
+            modelBuilder.Entity<Subject>().HasData(
+                new Subject
+                {
+                    Id = 1,
+                    Name = "Geography",
+                    Description = "The study of places and the relationships between people and their environments."
+                },
+                new Subject
+                {
+                    Id = 2,
+                    Name = "Philosophy",
+                    Description = "It is a way of expressing philosophical resignation over a disappointment, of saying that the situation just has to be put up with"
+                });
+
+            //modelBuilder.Entity<Student>().HasData(
+            //    new Student
             //    {
-            //        Id = 1,
-            //        Code = "B44"
+            //        Id = Guid.NewGuid(),
+            //        Name = "Viktor",
+            //        Surname="Crook",
+            //        EducationTypeId=EducationTypes.SingleAsync(x=>x.Name== "Bachelor").Result.Id,
+            //        GroupId=Groups.SingleAsync(x=>x.Code== "B44").Result.Id,
+            //        EntryYear=2020,
+            //        IsDeducted=false,
+            //        PhoneNum="+380631111111"
             //    },
-            //    new Group
+            //    new Student
             //    {
-            //        Id = 2,
-            //        Code = "F74"
+            //        Id = Guid.NewGuid(),
+            //        Name = "Michel",
+            //        Surname = "Regex",
+            //        EducationTypeId = EducationTypes.SingleAsync(x => x.Name == "Master").Result.Id,
+            //        GroupId = Groups.SingleAsync(x => x.Code == "F74").Result.Id,
+            //        EntryYear = 2018,
+            //        IsDeducted = false,
+            //        PhoneNum = "+380531111111"
             //    });
+
+            #endregion
         }
     }
 }

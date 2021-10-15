@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FacultyWebApp.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211013135621_initial")]
-    partial class initial
+    [Migration("20211015095610_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,8 +31,8 @@ namespace FacultyWebApp.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("EducationTypeId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("EducationTypeId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -47,15 +47,18 @@ namespace FacultyWebApp.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("DictionaryId")
+                    b.Property<int>("DictionaryId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("DictionaryId1")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DictionaryId");
+                    b.HasIndex("DictionaryId1");
 
                     b.HasIndex("SubjectId");
 
@@ -64,9 +67,10 @@ namespace FacultyWebApp.DAL.Migrations
 
             modelBuilder.Entity("FacultyWebApp.DAL.Entities.EducationType", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -79,13 +83,28 @@ namespace FacultyWebApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EducationTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years.",
+                            Name = "Bachelor"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice.",
+                            Name = "Master"
+                        });
                 });
 
             modelBuilder.Entity("FacultyWebApp.DAL.Entities.Group", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
                     b.Property<string>("Code")
                         .HasColumnType("text");
@@ -93,6 +112,18 @@ namespace FacultyWebApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "B44"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "F74"
+                        });
                 });
 
             modelBuilder.Entity("FacultyWebApp.DAL.Entities.Shedule", b =>
@@ -101,8 +132,8 @@ namespace FacultyWebApp.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Semester")
                         .IsRequired()
@@ -111,11 +142,8 @@ namespace FacultyWebApp.DAL.Migrations
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("SubjectId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("timestamp without time zone");
@@ -124,7 +152,7 @@ namespace FacultyWebApp.DAL.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.HasIndex("SubjectId1");
+                    b.HasIndex("SubjectId");
 
                     b.HasIndex("TeacherId");
 
@@ -137,14 +165,14 @@ namespace FacultyWebApp.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("EducationTypeId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("EducationTypeId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("EntryYear")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsDeducted")
                         .HasColumnType("boolean");
@@ -174,9 +202,10 @@ namespace FacultyWebApp.DAL.Migrations
 
             modelBuilder.Entity("FacultyWebApp.DAL.Entities.Subject", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -188,13 +217,28 @@ namespace FacultyWebApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "The study of places and the relationships between people and their environments.",
+                            Name = "Geography"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "It is a way of expressing philosophical resignation over a disappointment, of saying that the situation just has to be put up with",
+                            Name = "Philosophy"
+                        });
                 });
 
             modelBuilder.Entity("FacultyWebApp.DAL.Entities.Teacher", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
                     b.Property<string>("Degree")
                         .IsRequired()
@@ -243,9 +287,7 @@ namespace FacultyWebApp.DAL.Migrations
                 {
                     b.HasOne("FacultyWebApp.DAL.Entities.Dictionary", "Dictionary")
                         .WithMany("DictionarySubjects")
-                        .HasForeignKey("DictionaryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DictionaryId1");
 
                     b.HasOne("FacultyWebApp.DAL.Entities.Subject", "Subject")
                         .WithMany("DictionarySubjects")
@@ -264,7 +306,9 @@ namespace FacultyWebApp.DAL.Migrations
 
                     b.HasOne("FacultyWebApp.DAL.Entities.Subject", "Subject")
                         .WithMany("Shedules")
-                        .HasForeignKey("SubjectId1");
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FacultyWebApp.DAL.Entities.Teacher", "Teacher")
                         .WithMany("Shedules")

@@ -1,8 +1,7 @@
-﻿using FacultyWebApp.BLL.Interfaces;
+﻿using FacultyWebApp.BLL.DTOs;
+using FacultyWebApp.BLL.Interfaces;
 using FacultyWebApp.DAL.Entities;
 using FacultyWebApp.DAL.Interfaces;
-using FacultyWebApp.Domain.Models;
-using FacultyWebApp.Domain.Models.ResponseModels.AddictionalProps;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,14 +23,14 @@ namespace FacultyWebApp.BLL.Services
             _educatinTypesRepo = educatinTypesRepo;
         }
 
-        public List<GroupAddictional> GetAllGroups()
+        public List<GroupDTO> GetAllGroups()
         {
-            return _groupsRepo.GetAll().Select(x => new GroupAddictional() { Id = x.Id, Code = x.Code }).ToList(); 
+            return _groupsRepo.GetAll().Select(x => new GroupDTO() { Id = x.Id, Code = x.Code }).ToList(); 
         }
 
-        public List<EducationTypeAddictional> GetAllEducationtypes()
+        public List<EducationTypeDTO> GetAllEducationtypes()
         {
-            return _educatinTypesRepo.GetAll().Select(x => new EducationTypeAddictional() { Id = x.Id, Description = x.Description, Name = x.Name }).ToList();
+            return _educatinTypesRepo.GetAll().Select(x => new EducationTypeDTO() { Id = x.Id, Description = x.Description, Name = x.Name }).ToList();
         }
     }
 }

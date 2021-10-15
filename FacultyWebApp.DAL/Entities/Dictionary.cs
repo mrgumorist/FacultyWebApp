@@ -18,6 +18,6 @@ namespace FacultyWebApp.DAL.Entities
         public ICollection<DictionarySubject> DictionarySubjects { get; set; }
 
         public  EducationType EducationType { get; set; }
-        public Guid EducationTypeId { get; set; }
+        public int EducationTypeId { get; set; }
     }
 }

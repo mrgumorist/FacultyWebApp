@@ -10,7 +10,7 @@ namespace FacultyWebApp.DAL.Entities
     public class EducationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public int Id{ get; set; }
 
         [Required, StringLength(maximumLength: 40)]
         public string Name { get; set; }

@@ -5,14 +5,12 @@ using FacultyWebApp.BLL.Interfaces;
 using FacultyWebApp.DAL.Entities;
 using FacultyWebApp.DAL.Interfaces;
 using FacultyWebApp.Domain.ActionModels;
-using FacultyWebApp.Domain.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-using FacultyWebApp.Domain.Models.ResponseModels.AddictionalProps;
 
 namespace FacultyWebApp.BLL.Services
 {

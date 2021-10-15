@@ -10,7 +10,7 @@ namespace FacultyWebApp.DAL.Entities
     public class Group
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Code { get; set; }
         public ICollection<Student> Students { get; set; }
         public ICollection<Shedule> Shedules { get; set; }

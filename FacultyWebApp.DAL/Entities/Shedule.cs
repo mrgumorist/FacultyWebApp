@@ -25,9 +25,9 @@ namespace FacultyWebApp.DAL.Entities
         public DateTime Time { get; set; }
 
         public Teacher Teacher { get; set; }
-        public Guid TeacherId { get; set; }
+        public int TeacherId { get; set; }
 
         public Group Group { get; set; }
-        public Guid GroupId { get; set; }
+        public int GroupId { get; set; }
     }
 }

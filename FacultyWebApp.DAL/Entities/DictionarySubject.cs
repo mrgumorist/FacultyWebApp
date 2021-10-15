@@ -14,9 +14,9 @@ namespace FacultyWebApp.DAL.Entities
         public Guid Id { get; set; }
 
         public Subject Subject { get; set; }
-        public Guid SubjectId { get; set; }
+        public int SubjectId { get; set; }
 
         public Dictionary Dictionary { get; set; }
-        public Guid DictionaryId { get; set; }
+        public int DictionaryId { get; set; }
     }
 }
