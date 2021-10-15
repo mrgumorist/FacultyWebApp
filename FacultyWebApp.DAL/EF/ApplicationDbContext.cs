@@ -61,31 +61,6 @@ namespace FacultyWebApp.DAL.Entities
                     Name = "Philosophy",
                     Description = "It is a way of expressing philosophical resignation over a disappointment, of saying that the situation just has to be put up with"
                 });
-
-            //modelBuilder.Entity<Student>().HasData(
-            //    new Student
-            //    {
-            //        Id = Guid.NewGuid(),
-            //        Name = "Viktor",
-            //        Surname="Crook",
-            //        EducationTypeId=EducationTypes.SingleAsync(x=>x.Name== "Bachelor").Result.Id,
-            //        GroupId=Groups.SingleAsync(x=>x.Code== "B44").Result.Id,
-            //        EntryYear=2020,
-            //        IsDeducted=false,
-            //        PhoneNum="+380631111111"
-            //    },
-            //    new Student
-            //    {
-            //        Id = Guid.NewGuid(),
-            //        Name = "Michel",
-            //        Surname = "Regex",
-            //        EducationTypeId = EducationTypes.SingleAsync(x => x.Name == "Master").Result.Id,
-            //        GroupId = Groups.SingleAsync(x => x.Code == "F74").Result.Id,
-            //        EntryYear = 2018,
-            //        IsDeducted = false,
-            //        PhoneNum = "+380531111111"
-            //    });
-
             #endregion
         }
     }

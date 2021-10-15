@@ -3,6 +3,7 @@ using FacultyWebApp.BLL.Services;
 using FacultyWebApp.DAL.Entities;
 using FacultyWebApp.DAL.Interfaces;
 using FacultyWebApp.DAL.Repositories;
+using FacultyWebApp.DAL.Seeder;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -88,6 +89,9 @@ namespace FacultyWebApp.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
+
+
+            DbSeeder.SeedData(app.ApplicationServices);
         }
     }
 }

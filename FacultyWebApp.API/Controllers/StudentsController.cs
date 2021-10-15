@@ -81,14 +81,12 @@ namespace FacultyWebApp.API.Controllers
                 var errorList = (from item in ModelState
                                  where item.Value.Errors.Any()
                                  select item.Value.Errors[0].ErrorMessage).ToList();
-                var responseStr = String.Join("\n", errorList);
 
                 responseRes.IsSuccessful = false;
-                responseRes.Message = "One or more errors occured: \n";
-                responseRes.Message += responseStr;
+                responseRes.Message = "One or more errors occured. See ResObj for details error.";
                 responseRes.ResObj = errorList;
                 responseRes.StatusCode = BadRequest().StatusCode;
-                return Ok(responseRes);
+                return BadRequest(responseRes);
             }
             else
             {
@@ -101,7 +99,7 @@ namespace FacultyWebApp.API.Controllers
                     responseRes.IsSuccessful = false;
                     responseRes.Message = "Error with student. Maybe group or type of education are not valid.";
                     responseRes.StatusCode = BadRequest().StatusCode;
-                    return Ok(responseRes);
+                    return BadRequest(responseRes);
                 }
             }
 
@@ -120,14 +118,12 @@ namespace FacultyWebApp.API.Controllers
                 var errorList = (from item in ModelState
                                  where item.Value.Errors.Any()
                                  select item.Value.Errors[0].ErrorMessage).ToList();
-                var responseStr = String.Join("\n", errorList);
 
                 responseRes.IsSuccessful = false;
-                responseRes.Message = "One or more errors occured: \n";
-                responseRes.Message += responseStr;
+                responseRes.Message = "One or more errors occured. See ResObj for details error.";
                 responseRes.ResObj = errorList;
                 responseRes.StatusCode = BadRequest().StatusCode;
-                return Ok(responseRes);
+                return BadRequest(responseRes);
             }
             else
             {
@@ -140,7 +136,7 @@ namespace FacultyWebApp.API.Controllers
                     responseRes.IsSuccessful = false;
                     responseRes.Message = "Error with student. Maybe group or type of education are not valid.";
                     responseRes.StatusCode = BadRequest().StatusCode;
-                    return Ok(responseRes);
+                    return BadRequest(responseRes);
                 }
             }
 
