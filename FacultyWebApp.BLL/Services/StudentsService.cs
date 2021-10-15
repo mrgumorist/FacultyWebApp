@@ -74,8 +74,6 @@ namespace FacultyWebApp.BLL.Services
 
         public void AddStudent(StudentDTO studentDTO)
         {
-            try
-            {
                 var student = new Student()
                 {
                     EducationTypeId = studentDTO.EducationTypeId,
@@ -86,14 +84,24 @@ namespace FacultyWebApp.BLL.Services
                     PhoneNum = studentDTO.PhoneNum,
                     Surname = studentDTO.Surname
                 };
-
-
+                    
                 _genericRepo.Add(student);
-            }
-            catch (Exception ex)
-            {
+        }
 
-            }
+        public async Task AddStudentAsync(StudentDTO studentDTO)
+        {
+            var student = new Student()
+            {
+                EducationTypeId = studentDTO.EducationTypeId,
+                EntryYear = studentDTO.EntryYear,
+                GroupId = studentDTO.GroupId,
+                IsDeducted = studentDTO.IsDeducted,
+                Name = studentDTO.Name,
+                PhoneNum = studentDTO.PhoneNum,
+                Surname = studentDTO.Surname
+            };
+
+            await _genericRepo.AddAsync(student);
         }
     }
 }

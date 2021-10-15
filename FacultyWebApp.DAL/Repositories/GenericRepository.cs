@@ -24,6 +24,12 @@ namespace FacultyWebApp.DAL.Repositories
             _context.SaveChanges();
         }
 
+        public async void AddAsync(T entity)
+        {
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
         public void AddRange(IEnumerable<T> entities)
         {
             _context.Set<T>().AddRange(entities);

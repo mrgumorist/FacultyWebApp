@@ -29,14 +29,14 @@ namespace FacultyWebApp.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetStudentById(Guid id)
         {
-            AppResponseResult requestResult = new AppResponseResult();
+            AppResponseResult responseRes = new AppResponseResult();
             try
             {
                 var student = _studentsService.GetStudentById(id);
-                requestResult.IsSuccessful = true;
-                requestResult.Message = "Successfuly founded";
-                requestResult.ResObj = student;
-                requestResult.StatusCode = 200;
+                responseRes.IsSuccessful = true;
+                responseRes.Message = "Successfuly founded";
+                responseRes.ResObj = student;
+                responseRes.StatusCode = Ok().StatusCode;
             }
             catch(ValidationException ex)
             {
@@ -46,20 +46,20 @@ namespace FacultyWebApp.API.Controllers
             {
                 return BadRequest();
             }
-            return Ok(requestResult);
+            return Ok(responseRes);
         }
 
         [HttpGet("GetUserByIdAsync/{id}")]
         public async Task<IActionResult> GetStudentByIdAsync(Guid id)
         {
-            AppResponseResult requestResult = new AppResponseResult();
+            AppResponseResult responseRes = new AppResponseResult();
             try
             {
                 var student = await _studentsService.GetStudentByIdAsync(id);
-                requestResult.IsSuccessful = true;
-                requestResult.Message = "Successfuly founded";
-                requestResult.ResObj = student;
-                requestResult.StatusCode = 200;
+                responseRes.IsSuccessful = true;
+                responseRes.Message = "Successfuly founded";
+                responseRes.ResObj = student;
+                responseRes.StatusCode = Ok().StatusCode;
             }
             catch (ValidationException ex)
             {
@@ -69,39 +69,85 @@ namespace FacultyWebApp.API.Controllers
             {
                 return BadRequest();
             }
-            return Ok(requestResult);
+            return Ok(responseRes);
         }
 
         [HttpPost("CreateStudent")]
         public IActionResult CreateStudent([FromBody]StudentDTO studentDto)
         {
-            AppResponseResult requestResult = new AppResponseResult();
+            AppResponseResult responseRes = new AppResponseResult();
             if (!ModelState.IsValid)
             {
-                return Ok(studentDto);
+                var errorList = (from item in ModelState
+                                 where item.Value.Errors.Any()
+                                 select item.Value.Errors[0].ErrorMessage).ToList();
+                var responseStr = String.Join("\n", errorList);
+
+                responseRes.IsSuccessful = false;
+                responseRes.Message = "One or more errors occured: \n";
+                responseRes.Message += responseStr;
+                responseRes.ResObj = errorList;
+                responseRes.StatusCode = BadRequest().StatusCode;
+                return Ok(responseRes);
             }
             else
             {
-                _studentsService.AddStudent(studentDto);
-            try
-            {
-                //bool studentDTO = _studentsService.AddStudent(student);
-                //requestResult.IsSuccessful = true;
-                //requestResult.Message = "Successfuly founded";
-                //requestResult.ResObj = student;
-                //requestResult.StatusCode = 200;
-            }
-            catch (ValidationException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch
-            {
-                return BadRequest();
+                try
+                {
+                    _studentsService.AddStudent(studentDto);
+                }
+                catch
+                {
+                    responseRes.IsSuccessful = false;
+                    responseRes.Message = "Error with student. Maybe group or type of education are not valid.";
+                    responseRes.StatusCode = BadRequest().StatusCode;
+                    return Ok(responseRes);
+                }
             }
 
+            responseRes.IsSuccessful = true;
+            responseRes.StatusCode = Ok().StatusCode;
+            responseRes.Message = "Successfuly added";
+            return Ok(responseRes);
+        }
+
+        [HttpPost("CreateStudentAsync")]
+        public async Task<IActionResult> CreateStudentAsync([FromBody] StudentDTO studentDto)
+        {
+            AppResponseResult responseRes = new AppResponseResult();
+            if (!ModelState.IsValid)
+            {
+                var errorList = (from item in ModelState
+                                 where item.Value.Errors.Any()
+                                 select item.Value.Errors[0].ErrorMessage).ToList();
+                var responseStr = String.Join("\n", errorList);
+
+                responseRes.IsSuccessful = false;
+                responseRes.Message = "One or more errors occured: \n";
+                responseRes.Message += responseStr;
+                responseRes.ResObj = errorList;
+                responseRes.StatusCode = BadRequest().StatusCode;
+                return Ok(responseRes);
             }
-            return Ok(requestResult);
+            else
+            {
+                try
+                {
+                    await _studentsService.AddStudentAsync(studentDto);
+                }
+                catch 
+                {
+                    responseRes.IsSuccessful = false;
+                    responseRes.Message = "Error with student. Maybe group or type of education are not valid.";
+                    responseRes.StatusCode = BadRequest().StatusCode;
+                    return Ok(responseRes);
+                }
+            }
+
+            responseRes.IsSuccessful = true;
+            responseRes.StatusCode = Ok().StatusCode;
+            responseRes.Message = "Successfuly added";
+            return Ok(responseRes);
         }
     }
 }

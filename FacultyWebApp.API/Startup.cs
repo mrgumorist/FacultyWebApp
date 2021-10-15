@@ -48,7 +48,11 @@ namespace FacultyWebApp.API
 
             services.AddScoped<IStudentsService, StudentsService>();
 
-           // services.AddAutoMapper(c => c.AddProfile<BLL.Mappers.AutoMapping>(), typeof(Startup))
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            // services.AddAutoMapper(c => c.AddProfile<BLL.Mappers.AutoMapping>(), typeof(Startup))
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
