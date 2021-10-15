@@ -2,6 +2,7 @@
 using FacultyWebApp.BLL.Infrastructure;
 using FacultyWebApp.BLL.Interfaces;
 using FacultyWebApp.Domain.ActionModels;
+using FacultyWebApp.Domain.Models.RequestModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -146,7 +147,7 @@ namespace FacultyWebApp.API.Controllers
             return Ok(responseRes);
         }
 
-        [HttpPost("ChangeStudent")]
+        [HttpPut("ChangeStudent")]
         public IActionResult ChangeStudent([FromBody]StudentDTO studentDTO)
         {
             AppResponseResult responseRes = new AppResponseResult();
@@ -167,6 +168,12 @@ namespace FacultyWebApp.API.Controllers
             }
             return Ok(responseRes);
         }
-    }
 
+        [HttpPost("GetStudentsByFilter")]
+        public IActionResult GetStudentsByFilter([FromBody] StudentListRequestModel filters)
+        {
+
+            return Ok();
+        }
+    }
 }

@@ -22,8 +22,8 @@ namespace FacultyWebApp.DAL.Entities
         [Required, StringLength(maximumLength: 40)]
         public string FatherName { get; set; }
 
-        [Required, StringLength(maximumLength: 40)]
-        public string Degree { get; set; }
+        public Degree Degree { get; set; }
+        public int DegreeId { get; set; }
 
         [Required, StringLength(maximumLength: 40)]
         public string Position { get; set; }

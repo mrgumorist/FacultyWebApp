@@ -9,6 +9,20 @@ namespace FacultyWebApp.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Degrees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Degrees", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EducationTypes",
                 columns: table => new
                 {
@@ -58,13 +72,19 @@ namespace FacultyWebApp.DAL.Migrations
                     Surname = table.Column<string>(maxLength: 40, nullable: false),
                     Name = table.Column<string>(maxLength: 40, nullable: false),
                     FatherName = table.Column<string>(maxLength: 40, nullable: false),
-                    Degree = table.Column<string>(maxLength: 40, nullable: false),
+                    DegreeId = table.Column<int>(nullable: false),
                     Position = table.Column<string>(maxLength: 40, nullable: false),
                     PhoneNum = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Teachers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teachers_Degrees_DegreeId",
+                        column: x => x.DegreeId,
+                        principalTable: "Degrees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,12 +197,21 @@ namespace FacultyWebApp.DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "EducationTypes",
+                table: "Degrees",
                 columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
                     { 1, "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years.", "Bachelor" },
                     { 2, "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice.", "Master" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EducationTypes",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "A course of study in which student and tutors communicate by post.", "Сorrespondence" },
+                    { 2, "An evening class is a course for adults that is taught in the evening rather than during the day.", "Evening" }
                 });
 
             migrationBuilder.InsertData(
@@ -242,6 +271,11 @@ namespace FacultyWebApp.DAL.Migrations
                 name: "IX_Students_GroupId",
                 table: "Students",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teachers_DegreeId",
+                table: "Teachers",
+                column: "DegreeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -269,6 +303,9 @@ namespace FacultyWebApp.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "EducationTypes");
+
+            migrationBuilder.DropTable(
+                name: "Degrees");
         }
     }
 }

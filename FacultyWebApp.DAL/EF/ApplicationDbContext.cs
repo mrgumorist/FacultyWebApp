@@ -15,6 +15,7 @@ namespace FacultyWebApp.DAL.Entities
         public DbSet<Shedule> Shedules { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Degree> Degrees { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -22,14 +23,14 @@ namespace FacultyWebApp.DAL.Entities
         {
             base.OnModelCreating(modelBuilder);
             #region Seeding
-            modelBuilder.Entity<EducationType>().HasData(
-                new EducationType
+            modelBuilder.Entity<Degree>().HasData(
+                new Degree
                 {
                     Id=1,
                     Name = "Bachelor",
                     Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years."
                 },
-                 new EducationType
+                 new Degree
                  {
                      Id = 2,
                      Name = "Master",
@@ -61,6 +62,19 @@ namespace FacultyWebApp.DAL.Entities
                     Name = "Philosophy",
                     Description = "It is a way of expressing philosophical resignation over a disappointment, of saying that the situation just has to be put up with"
                 });
+            modelBuilder.Entity<EducationType>().HasData(
+              new EducationType
+              {
+                  Id = 1,
+                  Name = "Сorrespondence",
+                  Description = "A course of study in which student and tutors communicate by post."
+              },
+               new EducationType
+               {
+                   Id = 2,
+                   Name = "Evening",
+                   Description = "An evening class is a course for adults that is taught in the evening rather than during the day."
+               });
             #endregion
         }
     }

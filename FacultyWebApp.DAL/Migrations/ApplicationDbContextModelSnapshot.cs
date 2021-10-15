@@ -19,6 +19,38 @@ namespace FacultyWebApp.DAL.Migrations
                 .HasAnnotation("ProductVersion", "3.1.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("FacultyWebApp.DAL.Entities.Degree", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Degrees");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years.",
+                            Name = "Bachelor"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice.",
+                            Name = "Master"
+                        });
+                });
+
             modelBuilder.Entity("FacultyWebApp.DAL.Entities.Dictionary", b =>
                 {
                     b.Property<Guid>("Id")
@@ -86,14 +118,14 @@ namespace FacultyWebApp.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "It is an undergraduate academic degree awarded by colleges and universities upon completion of a course of study lasting three to six years.",
-                            Name = "Bachelor"
+                            Description = "A course of study in which student and tutors communicate by post.",
+                            Name = "Сorrespondence"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "It is an academic degree awarded by universities or colleges upon completion of a course of study demonstrating mastery or a high-order overview of a specific field of study or area of professional practice.",
-                            Name = "Master"
+                            Description = "An evening class is a course for adults that is taught in the evening rather than during the day.",
+                            Name = "Evening"
                         });
                 });
 
@@ -238,10 +270,8 @@ namespace FacultyWebApp.DAL.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
-                    b.Property<string>("Degree")
-                        .IsRequired()
-                        .HasColumnType("character varying(40)")
-                        .HasMaxLength(40);
+                    b.Property<int>("DegreeId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("FatherName")
                         .IsRequired()
@@ -268,6 +298,8 @@ namespace FacultyWebApp.DAL.Migrations
                         .HasMaxLength(40);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DegreeId");
 
                     b.ToTable("Teachers");
                 });
@@ -326,6 +358,15 @@ namespace FacultyWebApp.DAL.Migrations
                     b.HasOne("FacultyWebApp.DAL.Entities.Group", "Group")
                         .WithMany("Students")
                         .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FacultyWebApp.DAL.Entities.Teacher", b =>
+                {
+                    b.HasOne("FacultyWebApp.DAL.Entities.Degree", "Degree")
+                        .WithMany("Teachers")
+                        .HasForeignKey("DegreeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
