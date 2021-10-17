@@ -50,7 +50,7 @@ namespace FacultyWebApp.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetUserByIdAsync/{id}")]
+        [HttpGet("GetStudentByIdAsync/{id}")]
         public async Task<IActionResult> GetStudentByIdAsync(Guid id)
         {
             AppResponseResult response = new AppResponseResult();

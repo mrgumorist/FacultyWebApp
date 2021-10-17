@@ -49,9 +49,15 @@ namespace FacultyWebApp.API
 
             services.AddScoped<IGenericRepository<Group>, GenericRepository<Group>>();
 
+            services.AddScoped<IGenericRepository<Shedule>, GenericRepository<Shedule>>();
+
+            services.AddScoped<IGenericRepository<Teacher>, GenericRepository<Teacher>>();
+
             services.AddScoped<IGenericRepository<EducationType>, GenericRepository<EducationType>>();
 
             services.AddScoped<IStudentsService, StudentsService>();
+
+            services.AddScoped<ITeachersService, TeachersService>();
 
             services.AddScoped<IDataService, DataService>();
 

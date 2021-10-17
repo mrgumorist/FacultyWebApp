@@ -50,7 +50,7 @@ namespace FacultyWebApp.BLL.Services
                 EntryYear = student.EntryYear,
                 PhoneNum = student.PhoneNum,
                 EducationTypeId = student.EducationTypeId,
-                GroupId = student.Group.Id
+                GroupId = student.GroupId
             };
 
             return studentDTO;
@@ -77,7 +77,7 @@ namespace FacultyWebApp.BLL.Services
                 EntryYear = student.EntryYear,
                 PhoneNum = student.PhoneNum,
                 EducationTypeId = student.EducationTypeId,
-                GroupId = student.Group.Id
+                GroupId = student.GroupId
             };
 
             return studentDTO;
@@ -149,7 +149,7 @@ namespace FacultyWebApp.BLL.Services
 
             if (student.IsDeleted == true)
             {
-                throw new ValidationException("Student was before deleted", "id");
+                throw new ValidationException("Student was already deleted", "id");
             }
 
             student.IsDeleted = true;
@@ -158,8 +158,42 @@ namespace FacultyWebApp.BLL.Services
 
         public List<StudentDTO> AllByFilters(StudentListRequestModel filters)
         {
-            var students = _genericRepo.Find(x=>x.IsDeducted==false);
-            return null;
+            var studentsIQueryable = _genericRepo.GetAllIQueryable();
+
+            if (!String.IsNullOrWhiteSpace(filters.Surname))
+            {
+                studentsIQueryable = studentsIQueryable.Where(x => x.Surname == filters.Surname);
+            }
+            if (filters.GroupId.HasValue)
+            {
+                studentsIQueryable = studentsIQueryable.Where(x => x.GroupId == filters.GroupId);
+            }
+            if (filters.IsDeducted.HasValue)
+            {
+                studentsIQueryable = studentsIQueryable.Where(x => x.IsDeducted == filters.IsDeducted);
+            }
+            studentsIQueryable = studentsIQueryable.Where(x => x.IsDeleted == false);
+
+            var listOfStudents =  studentsIQueryable.ToList();
+            if(listOfStudents.Count==0)
+            {
+                throw new ValidationException("Count of students by filter is 0", "Count");
+            }
+
+            var listOfStudentDTOs = listOfStudents.Select(student => new StudentDTO() 
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Surname = student.Surname,
+                IsDeducted = student.IsDeducted,
+                EntryYear = student.EntryYear,
+                PhoneNum = student.PhoneNum,
+                EducationTypeId = student.EducationTypeId,
+                GroupId = student.GroupId
+            }
+            ).ToList();
+
+            return listOfStudentDTOs;
         }
     }
 }
