@@ -83,7 +83,6 @@ namespace FacultyWebApp.BLL.Services
         {
             var teacher = new Teacher()
             {
-                Id = teacherDTO.Id,
                 Name = teacherDTO.Name,
                 Surname = teacherDTO.Surname,
                 FatherName = teacherDTO.FatherName,
@@ -100,7 +99,6 @@ namespace FacultyWebApp.BLL.Services
         {
             var teacher = new Teacher()
             {
-                Id = teacherDTO.Id,
                 Name = teacherDTO.Name,
                 Surname = teacherDTO.Surname,
                 FatherName = teacherDTO.FatherName,
@@ -169,18 +167,15 @@ namespace FacultyWebApp.BLL.Services
 
             if (filters.SubjectId.HasValue)
             {
-                teachersIQueryable = teachersIQueryable.Where(x => _shedulesGenericRepo.GetAllIQueryable().Where(l=>l.SubjectId==filters.SubjectId&&l.TeacherId==x.Id).Count()!=0);
+                //JOIN
+                teachersIQueryable = teachersIQueryable.Where(x => _shedulesGenericRepo.GetAllIQueryable().Any(l=>l.SubjectId==filters.SubjectId&&l.TeacherId==x.Id));
             }
 
             teachersIQueryable = teachersIQueryable.Where(x => x.IsDeleted == false);
 
-            var listOfTeachers = teachersIQueryable.ToList();
-            if (listOfTeachers.Count == 0)
-            {
-                throw new ValidationException("Count of teachers by filter is 0", "Count");
-            }
+           
 
-            var listOfStudentDTOs = listOfTeachers.Select(teacher => new TeacherDTO()
+            var listOfStudentDTOs = teachersIQueryable.Select(teacher => new TeacherDTO()
             {
                 Id = teacher.Id,
                 Name = teacher.Name,
@@ -192,8 +187,11 @@ namespace FacultyWebApp.BLL.Services
             }
             ).ToList();
 
+            if (listOfStudentDTOs.Count == 0)
+            {
+                throw new ValidationException("Count of teachers by filter is 0", "Count");
+            }
             return listOfStudentDTOs;
         }
     }
-
 }
