@@ -57,6 +57,8 @@ namespace FacultyWebApp.API
 
             services.AddScoped<IGenericRepository<EducationType>, GenericRepository<EducationType>>();
 
+            services.AddScoped<IGenericRepository<Degree>, GenericRepository<Degree>>();
+
             services.AddScoped<IStudentsService, StudentsService>();
 
             services.AddScoped<ITeachersService, TeachersService>();

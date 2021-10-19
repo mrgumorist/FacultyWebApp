@@ -13,14 +13,16 @@ namespace FacultyWebApp.BLL.Services
     public class DataService:IDataService
     {
         private readonly IGenericRepository<Group> _groupsRepo;
-        private readonly IGenericRepository<EducationType> _educatinTypesRepo;
+        private readonly IGenericRepository<EducationType> _educationTypesRepo;
+        private readonly IGenericRepository<Degree> _degriesRepo;
         private readonly ILogger<DataService> _logger;
 
-        public DataService(ILogger<DataService> logger, IGenericRepository<Group> groupsRepo, IGenericRepository<EducationType> educatinTypesRepo)
+        public DataService(ILogger<DataService> logger, IGenericRepository<Group> groupsRepo, IGenericRepository<EducationType> educatoinTypesRepo, IGenericRepository<Degree> degriesRepo)
         {
             _logger = logger;
             _groupsRepo = groupsRepo;
-            _educatinTypesRepo = educatinTypesRepo;
+            _educationTypesRepo = educatoinTypesRepo;
+            _degriesRepo = degriesRepo;
         }
 
         public List<GroupDTO> GetAllGroups()
@@ -30,7 +32,12 @@ namespace FacultyWebApp.BLL.Services
 
         public List<EducationTypeDTO> GetAllEducationtypes()
         {
-            return _educatinTypesRepo.GetAll().Select(x => new EducationTypeDTO() { Id = x.Id, Description = x.Description, Name = x.Name }).ToList();
+            return _educationTypesRepo.GetAll().Select(x => new EducationTypeDTO() { Id = x.Id, Description = x.Description, Name = x.Name }).ToList();
+        }
+
+        public List<DegreeDTO> GetAllDegries()
+        {
+            return _degriesRepo.GetAll().Select(x => new DegreeDTO() { Id = x.Id, Description = x.Description, Name = x.Name }).ToList();
         }
     }
 }

@@ -35,6 +35,10 @@ namespace FacultyWebApp.API.Controllers
             return Ok(_dataService.GetAllEducationtypes());
         }
 
-
+        [HttpGet("GetAllDegries")]
+        public IActionResult GetAllDegries()
+        {
+            return Ok(_dataService.GetAllDegries());
+        }
     }
 }
