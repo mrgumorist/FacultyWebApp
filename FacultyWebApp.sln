@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacultyWebApp.DAL", "Facult
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacultyWebApp.BLL", "FacultyWebApp.BLL\FacultyWebApp.BLL.csproj", "{DAB321F7-6F68-497B-AE00-E0CD0849D433}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacultyWebApp.Domain", "FacultyWebApp.Domain\FacultyWebApp.Domain.csproj", "{5AB37FAD-E24D-45A8-9296-5DD72DB99D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacultyWebApp.Domain", "FacultyWebApp.Domain\FacultyWebApp.Domain.csproj", "{5AB37FAD-E24D-45A8-9296-5DD72DB99D48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacultyWebApp.Tests", "FacultyWebApp.Tests\FacultyWebApp.Tests.csproj", "{C40FE5A8-A0CD-427B-A791-4B08E0E09E1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5AB37FAD-E24D-45A8-9296-5DD72DB99D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AB37FAD-E24D-45A8-9296-5DD72DB99D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AB37FAD-E24D-45A8-9296-5DD72DB99D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C40FE5A8-A0CD-427B-A791-4B08E0E09E1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C40FE5A8-A0CD-427B-A791-4B08E0E09E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C40FE5A8-A0CD-427B-A791-4B08E0E09E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C40FE5A8-A0CD-427B-A791-4B08E0E09E1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
