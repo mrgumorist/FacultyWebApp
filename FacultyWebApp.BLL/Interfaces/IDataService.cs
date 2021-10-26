@@ -9,5 +9,6 @@ namespace FacultyWebApp.BLL.Interfaces
     {
         public List<GroupDTO> GetAllGroups();
         public List<EducationTypeDTO> GetAllEducationtypes();
+        public List<DegreeDTO> GetAllDegries();
     }
 }
