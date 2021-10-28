@@ -28,8 +28,8 @@ namespace FacultyWebApp.Tests.ControllersTests
 
             //InitData
             _mockStudentsService.Setup(x => x.AllByFilters(It.IsAny<StudentListRequestModel>())).Throws(new ValidationException("Count of students by filter is 0", "Count"));
-            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x=>x.GroupId==1))).Returns((GetTestStudents().Where(x=>x.GroupId==1).ToList()));
-            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x => !x.GroupId.HasValue&&!x.IsDeducted.HasValue&&x.Surname==null))).Returns(GetTestStudents);
+            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x => x.GroupId == 1))).Returns((GetTestStudents().Where(x => x.GroupId == 1).ToList()));
+            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x => !x.GroupId.HasValue && !x.IsDeducted.HasValue && x.Surname == null))).Returns(GetTestStudents);
 
 
             _mockStudentsService.Setup(x => x.AddStudent(It.IsAny<StudentDTO>()));
@@ -59,12 +59,12 @@ namespace FacultyWebApp.Tests.ControllersTests
         }
 
         [Test]
-        [TestCase(true,1, "Successfuly founded")]
-        [TestCase(false, 3, "Count of students by filter is 0")]
-        [TestCase(true, null, "Successfuly founded")]
-        public void GetStudentsTest(bool isCorrect,int? groupId, string statusMessage)
+        [TestCase(true, 1, "Successfuly founded", 2)]
+        [TestCase(false, 3, "Count of students by filter is 0", 0)]
+        [TestCase(true, null, "Successfuly founded", 3)]
+        public void AllByFiltersTest(bool isCorrect, int? groupId, string statusMessage, int countOfStudents)
         {
-            var result = _studentsController.AllByFilters(new StudentListRequestModel() { GroupId=groupId});
+            var result = _studentsController.AllByFilters(new StudentListRequestModel() { GroupId = groupId });
             if (isCorrect)
             {
                 Assert.IsInstanceOf<OkObjectResult>(result, "Instance success result");
@@ -72,14 +72,7 @@ namespace FacultyWebApp.Tests.ControllersTests
                 Assert.AreEqual(true, response.IsSuccessful);
                 Assert.AreEqual(statusMessage, response.Message);
                 Assert.IsNotNull(response.ResObj);
-                if (groupId.HasValue)
-                {
-                    Assert.AreEqual(2, ((List<StudentDTO>)response.ResObj).Count, "Count compare");
-                }
-                else
-                {
-                    Assert.That(((List<StudentDTO>)response.ResObj).Count!=0, "Count compare");
-                }
+                Assert.IsTrue(((List<StudentDTO>)response.ResObj).Count == countOfStudents, "Count compare");
             }
             else
             {
@@ -95,8 +88,8 @@ namespace FacultyWebApp.Tests.ControllersTests
         [Test]
         [TestCase("+380631190911", true, false, "Successfuly added")]
         [TestCase("+3806311", false, true, "ErrorPhoneNum")]
-        [TestCase("+380631190944", false, false, "Error with student.")]
-        public void AddStudentTest(string phoneNum, bool isCorrect, bool haveModelErorr, string statusMessage)
+        [TestCase("+380631190944", false, false, "Error with dbcontext.")]
+        public void CreateStudentTest(string phoneNum, bool isCorrect, bool haveModelErorr, string statusMessage)
         {
             var student = new StudentDTO()
             {
@@ -129,15 +122,9 @@ namespace FacultyWebApp.Tests.ControllersTests
                 AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
                 Assert.AreEqual(false, response.IsSuccessful);
                 Assert.NotNull(response.ResObj);
-                if (response.Message.StartsWith("Error with student."))
-                {
-                    Assert.AreEqual("Error with dbcontext.", ((List<string>)response.ResObj)[0], "Compare errors");
-                }
-                else if (response.Message.StartsWith("One or more errors occured"))
-                {
-                    Assert.AreEqual("ErrorPhoneNum", ((List<string>)response.ResObj)[0], "Compare errors");
-                }
-
+                Assert.IsTrue(response.Message.StartsWith("Exception!"));
+                Assert.IsTrue(((List<string>)response.ResObj).Count != 0);
+                Assert.IsTrue(((List<string>)response.ResObj)[0].StartsWith(statusMessage));
             }
         }
 
@@ -188,6 +175,8 @@ namespace FacultyWebApp.Tests.ControllersTests
                         Assert.NotNull(response.ResObj);
                         Assert.AreEqual("ErrorPhoneNum", ((List<string>)response.ResObj)[0], "Compare errors");
                         break;
+                    default:
+                        break;
                 }
             }
         }
@@ -222,10 +211,11 @@ namespace FacultyWebApp.Tests.ControllersTests
                         Assert.AreEqual(false, response.IsSuccessful);
                         Assert.AreEqual(null, response.ResObj);
                         break;
+                    default:
+                        break;
                 }
             }
         }
-
 
         #region Contsants
         private List<StudentDTO> GetTestStudents()

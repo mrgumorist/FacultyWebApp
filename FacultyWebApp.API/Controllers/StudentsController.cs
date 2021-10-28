@@ -90,7 +90,7 @@ namespace FacultyWebApp.API.Controllers
                                  select item.Value.Errors[0].ErrorMessage).ToList();
 
                 response.IsSuccessful = false;
-                response.Message = "One or more errors occured. See ResObj for details error.";
+                response.Message = "Exception! One or more errors occured. See ResObj for details error.";
                 response.ResObj = errorList;
                 response.StatusCode = BadRequest().StatusCode;
                 return BadRequest(response);
@@ -104,7 +104,7 @@ namespace FacultyWebApp.API.Controllers
                 catch(Exception ex)
                 {
                     response.IsSuccessful = false;
-                    response.Message = "Error with student. Maybe group or type of education are not valid.";
+                    response.Message = "Exception! Error with student. Maybe group or type of education are not valid.";
                     response.StatusCode = BadRequest().StatusCode;
                     response.ResObj = new List<string>() { "Error with dbcontext.", ex.Message};
                     return BadRequest(response);
