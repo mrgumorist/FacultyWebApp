@@ -41,11 +41,17 @@ namespace FacultyWebApp.API.Controllers
             }
             catch (ValidationException ex)
             {
-                return NotFound(ex.Message);
+                response.IsSuccessful = false;
+                response.Message = ex.Message;
+                response.StatusCode = NotFound().StatusCode;
+                return NotFound(response);
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                response.IsSuccessful = false;
+                response.Message = ex.Message;
+                response.StatusCode = BadRequest().StatusCode;
+                return BadRequest(response);
             }
             return Ok(response);
         }
@@ -151,20 +157,35 @@ namespace FacultyWebApp.API.Controllers
         public IActionResult ChangeStudent([FromBody]StudentDTO studentDTO)
         {
             AppResponseResult response = new AppResponseResult();
-            try
+            if (!ModelState.IsValid)
             {
-                _studentsService.ChangeStudent(studentDTO);
-                response.IsSuccessful = true;
-                response.Message = "Successfuly updated";
-                response.StatusCode = Ok().StatusCode;
+                var errorList = (from item in ModelState
+                                 where item.Value.Errors.Any()
+                                 select item.Value.Errors[0].ErrorMessage).ToList();
+
+                response.IsSuccessful = false;
+                response.Message = "One or more errors occured. See ResObj for details error.";
+                response.ResObj = errorList;
+                response.StatusCode = BadRequest().StatusCode;
+                return BadRequest(response);
             }
-            catch (ValidationException ex)
+            else
             {
-                return NotFound(ex.Message);
-            }
-            catch
-            {
-                return BadRequest();
+                try
+                {
+                    _studentsService.ChangeStudent(studentDTO);
+                    response.IsSuccessful = true;
+                    response.Message = "Successfuly updated";
+                    response.StatusCode = Ok().StatusCode;
+                }
+                catch (ValidationException ex)
+                {
+                    return NotFound(ex.Message);
+                }
+                catch
+                {
+                    return BadRequest();
+                }
             }
             return Ok(response);
         }
