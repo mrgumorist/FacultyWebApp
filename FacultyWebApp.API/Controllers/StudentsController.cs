@@ -180,11 +180,17 @@ namespace FacultyWebApp.API.Controllers
                 }
                 catch (ValidationException ex)
                 {
-                    return NotFound(ex.Message);
+                    response.IsSuccessful = false;
+                    response.Message = ex.Message;
+                    response.StatusCode = NotFound().StatusCode;
+                    return NotFound(response);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    return BadRequest();
+                    response.IsSuccessful = false;
+                    response.Message = ex.Message;
+                    response.StatusCode = BadRequest().StatusCode;
+                    return BadRequest(response);
                 }
             }
             return Ok(response);

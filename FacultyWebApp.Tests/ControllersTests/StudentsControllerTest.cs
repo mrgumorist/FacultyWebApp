@@ -33,6 +33,8 @@ namespace FacultyWebApp.Tests.ControllersTests
 
             _mockStudentsService.Setup(x => x.ChangeStudent(It.IsAny<StudentDTO>()));
 
+            _mockStudentsService.Setup(x => x.ChangeStudent(It.Is<StudentDTO>(x => x.Id == Guid.Parse("f3d58855-29e0-4d1a-a788-fec3d388c856")))).Throws(new ValidationException("Student was not founded", "id"));
+
 
 
             _mockStudentsService.Setup(x => x.GetStudentById(It.IsAny<Guid>())).Returns(() => throw new ValidationException("Student was not founded", "id"));
@@ -66,6 +68,7 @@ namespace FacultyWebApp.Tests.ControllersTests
         }
 
         [Test]
+        [TestCase]
         public void AddStudent()
         {
             var student = new StudentDTO()
@@ -116,27 +119,54 @@ namespace FacultyWebApp.Tests.ControllersTests
         }
 
         [Test]
-        public void ChangeStudent()
+        [TestCase("9e254fbe-97eb-47b9-a751-0219689c62a5", "+380631190911", true, false, "Successfuly updated")]
+        [TestCase("f3d58855-29e0-4d1a-a788-fec3d388c856", "+380631190911", false, false, "Student was not founded")]
+        [TestCase("9e254fbe-97eb-47b9-a751-0219689c62a5", "+3806311", false, true, "ErrorPhoneNum")]
+        public void ChangeStudentTest(string id, string phoneNum, bool isCorrect, bool modelErorr, string statusMessage)
         {
             var student = new StudentDTO()
             {
-                Id = Guid.Parse("9e254fbe-97eb-47b9-a751-0219689c62a5"),
+                Id = Guid.Parse(id),
                 EducationTypeId = 1,
                 EntryYear = 1,
                 GroupId = 1,
                 IsDeducted = false,
                 Name = "Vitaliy",
                 Surname = "Klichko",
-                PhoneNum = "+380978456712"
+                PhoneNum = phoneNum
             };
 
-            var result = _studentsController.ChangeStudent(student);
-            Assert.IsInstanceOf<OkObjectResult>(result, "Instance result");
+            if (modelErorr)
+            {
+                _studentsController.ModelState.AddModelError("PhoneNum", "ErrorPhoneNum");
+            }
 
-            var okResult = result as OkObjectResult;
-            AppResponseResult appRes = (AppResponseResult)okResult.Value;
-            Assert.IsAssignableFrom<AppResponseResult>(
-                appRes, "Is needed model");
+            var result = _studentsController.ChangeStudent(student);
+            if (isCorrect)
+            {
+                Assert.IsInstanceOf<OkObjectResult>(result, "Instance susses result");
+                AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
+                Assert.AreEqual(true, response.IsSuccessful);
+                Assert.AreEqual(statusMessage, response.Message);
+                Assert.IsNull(response.ResObj);
+            }
+            else
+            {
+                AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
+                switch (response.StatusCode)
+                {
+                    case 404:
+                        Assert.AreEqual(false, response.IsSuccessful);
+                        Assert.AreEqual(statusMessage, response.Message);
+                        Assert.AreEqual(null, response.ResObj);
+                        break;
+                    case 400:
+                        Assert.AreEqual(false, response.IsSuccessful);
+                        Assert.NotNull(response.ResObj);
+                        Assert.AreEqual("ErrorPhoneNum", ((List<string>)response.ResObj)[0], "Compare errors");
+                        break;
+                }
+            }
         }
 
         [Test]
