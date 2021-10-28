@@ -101,11 +101,12 @@ namespace FacultyWebApp.API.Controllers
                 {
                     _studentsService.AddStudent(studentDto);
                 }
-                catch
+                catch(Exception ex)
                 {
                     response.IsSuccessful = false;
                     response.Message = "Error with student. Maybe group or type of education are not valid.";
                     response.StatusCode = BadRequest().StatusCode;
+                    response.ResObj = new List<string>() { "Error with dbcontext.", ex.Message};
                     return BadRequest(response);
                 }
             }
@@ -232,11 +233,10 @@ namespace FacultyWebApp.API.Controllers
             }
             catch (ValidationException ex)
             {
-                return NotFound(ex.Message);
-            }
-            catch
-            {
-                return BadRequest();
+                response.IsSuccessful = false;
+                response.Message = ex.Message;
+                response.StatusCode = BadRequest().StatusCode;
+                return BadRequest(response);
             }
             return Ok(response);
         }

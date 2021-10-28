@@ -27,18 +27,21 @@ namespace FacultyWebApp.Tests.ControllersTests
             _mockLogger = new Mock<ILogger<StudentsController>>();
 
             //InitData
-            _mockStudentsService.Setup(x => x.AllByFilters(It.IsAny<StudentListRequestModel>())).Returns(GetTestStudents);
+            _mockStudentsService.Setup(x => x.AllByFilters(It.IsAny<StudentListRequestModel>())).Throws(new ValidationException("Count of students by filter is 0", "Count"));
+            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x=>x.GroupId==1))).Returns(GetTestStudents);
+
 
             _mockStudentsService.Setup(x => x.AddStudent(It.IsAny<StudentDTO>()));
+            _mockStudentsService.Setup(x => x.AddStudent(It.Is<StudentDTO>(x => x.PhoneNum == "+3806311"))).Throws(new ValidationException("Student was not founded", "id"));
+            _mockStudentsService.Setup(x => x.AddStudent(It.Is<StudentDTO>(x => x.PhoneNum == "+380631190944"))).Throws(new Exception("Sample ex."));
+
 
             _mockStudentsService.Setup(x => x.ChangeStudent(It.IsAny<StudentDTO>()));
-
             _mockStudentsService.Setup(x => x.ChangeStudent(It.Is<StudentDTO>(x => x.Id == Guid.Parse("f3d58855-29e0-4d1a-a788-fec3d388c856")))).Throws(new ValidationException("Student was not founded", "id"));
 
 
 
             _mockStudentsService.Setup(x => x.GetStudentById(It.IsAny<Guid>())).Returns(() => throw new ValidationException("Student was not founded", "id"));
-
             _mockStudentsService.Setup(x => x.GetStudentById(Guid.Parse("9e254fbe-97eb-47b9-a751-0219689c62a5"))).Returns(() => new StudentDTO()
             {
                 Id = Guid.Parse("9e254fbe-97eb-47b9-a751-0219689c62a5"),
@@ -56,20 +59,36 @@ namespace FacultyWebApp.Tests.ControllersTests
         }
 
         [Test]
-        public void GetStudents()
+        [TestCase(true,1, "Successfuly founded")]
+        [TestCase(false, 3, "Count of students by filter is 0")]
+        public void GetStudentsTest(bool isCorrect,int groupId, string statusMessage)
         {
-            var result = _studentsController.AllByFilters(GetModel());
-            Assert.IsInstanceOf<OkObjectResult>(result, "Instance result");
-            var okResult = result as OkObjectResult;
-            AppResponseResult appRes = (AppResponseResult)okResult.Value;
-            Assert.IsAssignableFrom<AppResponseResult>(
-                appRes, "Is needed model");
-            Assert.AreEqual(2, ((List<StudentDTO>)appRes.ResObj).Count, "Count compare");
+            var result = _studentsController.AllByFilters(new StudentListRequestModel() { GroupId=groupId});
+            if (isCorrect)
+            {
+                Assert.IsInstanceOf<OkObjectResult>(result, "Instance success result");
+                AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
+                Assert.AreEqual(true, response.IsSuccessful);
+                Assert.AreEqual(statusMessage, response.Message);
+                Assert.IsNotNull(response.ResObj);
+                Assert.AreEqual(2, ((List<StudentDTO>)response.ResObj).Count, "Count compare");
+            }
+            else
+            {
+                Assert.IsInstanceOf<BadRequestObjectResult>(result, "Instance badReques result");
+                AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
+                Assert.AreEqual(false, response.IsSuccessful);
+                Assert.AreEqual(statusMessage, response.Message);
+                Assert.Null(response.ResObj);
+            }
+
         }
 
         [Test]
-        [TestCase]
-        public void AddStudent()
+        [TestCase("+380631190911", true, false, "Successfuly added")]
+        [TestCase("+3806311", false, true, "ErrorPhoneNum")]
+        [TestCase("+380631190944", false, false, "Error with student.")]
+        public void AddStudentTest(string phoneNum, bool isCorrect, bool haveModelErorr, string statusMessage)
         {
             var student = new StudentDTO()
             {
@@ -79,50 +98,46 @@ namespace FacultyWebApp.Tests.ControllersTests
                 IsDeducted = false,
                 Name = "Vitaliy",
                 Surname = "Klichko",
-                PhoneNum = "+380978456712"
+                PhoneNum = phoneNum
             };
 
-            var result = _studentsController.CreateStudent(student);
-            Assert.IsInstanceOf<OkObjectResult>(result, "Instance result");
-
-            var okResult = result as OkObjectResult;
-            AppResponseResult appRes = (AppResponseResult)okResult.Value;
-            Assert.IsAssignableFrom<AppResponseResult>(
-                appRes, "Is needed model");
-        }
-
-        [Test]
-        public void AddStudentWithModelStateError()
-        {
-            var student = new StudentDTO()
+            if (haveModelErorr)
             {
-                EducationTypeId = 1,
-                EntryYear = 1,
-                GroupId = 1,
-                IsDeducted = false,
-                Name = "Vitaliy",
-                Surname = "Klichko",
-                PhoneNum = "+380"
-            };
-
-            _studentsController.ModelState.AddModelError("PhoneNum", "ErrorPhoneNum");
+                _studentsController.ModelState.AddModelError("PhoneNum", "ErrorPhoneNum");
+            }
 
             var result = _studentsController.CreateStudent(student);
-            Assert.IsInstanceOf<BadRequestObjectResult>(result, "Instance result");
 
-            var badResult = result as BadRequestObjectResult;
-            AppResponseResult appRes = (AppResponseResult)badResult.Value;
-            Assert.IsAssignableFrom<AppResponseResult>(
-                appRes, "Is needed model");
+            if (isCorrect)
+            {
+                Assert.IsInstanceOf<OkObjectResult>(result, "Instance success result");
+                AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
+                Assert.AreEqual(true, response.IsSuccessful);
+                Assert.AreEqual(statusMessage, response.Message);
+                Assert.IsNull(response.ResObj);
+            }
+            else
+            {
+                AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
+                Assert.AreEqual(false, response.IsSuccessful);
+                Assert.NotNull(response.ResObj);
+                if (response.Message.StartsWith("Error with student."))
+                {
+                    Assert.AreEqual("Error with dbcontext.", ((List<string>)response.ResObj)[0], "Compare errors");
+                }
+                else if (response.Message.StartsWith("One or more errors occured"))
+                {
+                    Assert.AreEqual("ErrorPhoneNum", ((List<string>)response.ResObj)[0], "Compare errors");
+                }
 
-            Assert.AreEqual("ErrorPhoneNum", ((List<string>)appRes.ResObj)[0], "Compare errors");
+            }
         }
 
         [Test]
         [TestCase("9e254fbe-97eb-47b9-a751-0219689c62a5", "+380631190911", true, false, "Successfuly updated")]
         [TestCase("f3d58855-29e0-4d1a-a788-fec3d388c856", "+380631190911", false, false, "Student was not founded")]
         [TestCase("9e254fbe-97eb-47b9-a751-0219689c62a5", "+3806311", false, true, "ErrorPhoneNum")]
-        public void ChangeStudentTest(string id, string phoneNum, bool isCorrect, bool modelErorr, string statusMessage)
+        public void ChangeStudentTest(string id, string phoneNum, bool isCorrect, bool haveModelErorr, string statusMessage)
         {
             var student = new StudentDTO()
             {
@@ -136,7 +151,7 @@ namespace FacultyWebApp.Tests.ControllersTests
                 PhoneNum = phoneNum
             };
 
-            if (modelErorr)
+            if (haveModelErorr)
             {
                 _studentsController.ModelState.AddModelError("PhoneNum", "ErrorPhoneNum");
             }
@@ -144,7 +159,7 @@ namespace FacultyWebApp.Tests.ControllersTests
             var result = _studentsController.ChangeStudent(student);
             if (isCorrect)
             {
-                Assert.IsInstanceOf<OkObjectResult>(result, "Instance susses result");
+                Assert.IsInstanceOf<OkObjectResult>(result, "Instance success result");
                 AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
                 Assert.AreEqual(true, response.IsSuccessful);
                 Assert.AreEqual(statusMessage, response.Message);
@@ -169,7 +184,6 @@ namespace FacultyWebApp.Tests.ControllersTests
             }
         }
 
-        
         [Test]
         [TestCase("9e254fbe-97eb-47b9-a751-0219689c62a5", true, "Successfuly founded")]
         [TestCase("d670ab36-a10d-4e77-b529-5c587369d8d0", false, "Student was not founded")]
@@ -177,9 +191,9 @@ namespace FacultyWebApp.Tests.ControllersTests
         public void GetStudentByIdTest(string id, bool isCorrect, string statusMessage)
         {
             var result = _studentsController.GetStudentById(Guid.Parse(id));
-            if (isCorrect == true)
+            if (isCorrect)
             {
-                Assert.IsInstanceOf<OkObjectResult>(result, "Instance susses result");
+                Assert.IsInstanceOf<OkObjectResult>(result, "Instance success result");
                 AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
                 Assert.AreEqual(true, response.IsSuccessful);
                 Assert.AreEqual(statusMessage, response.Message);
