@@ -180,12 +180,13 @@ namespace FacultyWebApp.Tests.ControllersTests
                 AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
                 Assert.AreEqual(true, response.IsSuccessful);
                 Assert.AreEqual(statusMessage, response.Message);
-                Assert.AreEqual("9e254fbe-97eb-47b9-a751-0219689c62a5", ((StudentDTO)response.ResObj).Id.ToString());
+                Assert.IsNotNull(response.ResObj);
+                Assert.IsAssignableFrom<StudentDTO>(response.ResObj);
             }
             else
             {
                 AppResponseResult response = (AppResponseResult)((ObjectResult)result).Value;
-                switch(response.StatusCode)
+                switch (response.StatusCode)
                 {
                     case 404:
                         Assert.AreEqual(false, response.IsSuccessful);
