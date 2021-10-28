@@ -10,7 +10,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace FacultyWebApp.Tests.ControllersTests
 {
@@ -28,7 +28,8 @@ namespace FacultyWebApp.Tests.ControllersTests
 
             //InitData
             _mockStudentsService.Setup(x => x.AllByFilters(It.IsAny<StudentListRequestModel>())).Throws(new ValidationException("Count of students by filter is 0", "Count"));
-            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x=>x.GroupId==1))).Returns(GetTestStudents);
+            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x=>x.GroupId==1))).Returns((GetTestStudents().Where(x=>x.GroupId==1).ToList()));
+            _mockStudentsService.Setup(x => x.AllByFilters(It.Is<StudentListRequestModel>(x => !x.GroupId.HasValue&&!x.IsDeducted.HasValue&&x.Surname==null))).Returns(GetTestStudents);
 
 
             _mockStudentsService.Setup(x => x.AddStudent(It.IsAny<StudentDTO>()));
@@ -61,7 +62,8 @@ namespace FacultyWebApp.Tests.ControllersTests
         [Test]
         [TestCase(true,1, "Successfuly founded")]
         [TestCase(false, 3, "Count of students by filter is 0")]
-        public void GetStudentsTest(bool isCorrect,int groupId, string statusMessage)
+        [TestCase(true, null, "Successfuly founded")]
+        public void GetStudentsTest(bool isCorrect,int? groupId, string statusMessage)
         {
             var result = _studentsController.AllByFilters(new StudentListRequestModel() { GroupId=groupId});
             if (isCorrect)
@@ -71,7 +73,14 @@ namespace FacultyWebApp.Tests.ControllersTests
                 Assert.AreEqual(true, response.IsSuccessful);
                 Assert.AreEqual(statusMessage, response.Message);
                 Assert.IsNotNull(response.ResObj);
-                Assert.AreEqual(2, ((List<StudentDTO>)response.ResObj).Count, "Count compare");
+                if (groupId.HasValue)
+                {
+                    Assert.AreEqual(2, ((List<StudentDTO>)response.ResObj).Count, "Count compare");
+                }
+                else
+                {
+                    Assert.AreEqual(3, ((List<StudentDTO>)response.ResObj).Count, "Count compare");
+                }
             }
             else
             {
@@ -220,14 +229,6 @@ namespace FacultyWebApp.Tests.ControllersTests
 
 
         #region Contsants
-        private StudentListRequestModel GetModel()
-        {
-            return new StudentListRequestModel()
-            {
-                GroupId = 1
-            };
-        }
-
         private List<StudentDTO> GetTestStudents()
         {
             return new List<StudentDTO>()
@@ -253,6 +254,17 @@ namespace FacultyWebApp.Tests.ControllersTests
                     Name="Viktor",
                     Surname="Coi",
                     PhoneNum="+380789489456"
+                },
+                new StudentDTO()
+                {
+                    Id=Guid.Parse("d670ab36-a10d-a10d-a10d-5c587369d8d0"),
+                    EducationTypeId=1,
+                    EntryYear=2045,
+                    GroupId=2,
+                    IsDeducted=false,
+                    Name="Kolya",
+                    Surname="Kolia",
+                    PhoneNum="+380964124862"
                 }
             };
         }
