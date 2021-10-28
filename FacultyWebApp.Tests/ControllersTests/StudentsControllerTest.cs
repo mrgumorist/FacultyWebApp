@@ -169,34 +169,7 @@ namespace FacultyWebApp.Tests.ControllersTests
             }
         }
 
-        [Test]
-        public void ChangeStudentWithModelStateError()
-        {
-            var student = new StudentDTO()
-            {
-                Id = Guid.Parse("9e254fbe-97eb-47b9-a751-0219689c62a5"),
-                EducationTypeId = 1,
-                EntryYear = 1,
-                GroupId = 1,
-                IsDeducted = false,
-                Name = "Vitaliy",
-                Surname = "Klichko",
-                PhoneNum = "+380978456712"
-            };
-
-            _studentsController.ModelState.AddModelError("PhoneNum", "ErrorPhoneNum");
-
-            var result = _studentsController.ChangeStudent(student);
-            Assert.IsInstanceOf<BadRequestObjectResult>(result, "Instance result");
-
-            var badResult = result as BadRequestObjectResult;
-            AppResponseResult appRes = (AppResponseResult)badResult.Value;
-            Assert.IsAssignableFrom<AppResponseResult>(
-                appRes, "Is needed model");
-
-            Assert.AreEqual("ErrorPhoneNum", ((List<string>)appRes.ResObj)[0], "Compare errors");
-        }
-
+        
         [Test]
         [TestCase("9e254fbe-97eb-47b9-a751-0219689c62a5", true, "Successfuly founded")]
         [TestCase("d670ab36-a10d-4e77-b529-5c587369d8d0", false, "Student was not founded")]
